@@ -1,0 +1,23 @@
+h1{
+    margin-top: 80px;
+}
+p {
+    color: #818181;
+    margin-top: 46px;
+    margin-bottom: 77px;
+}
+h2{
+  font-size: 32px;
+  color: #818181;
+  font-weight: 300;
+}
+.importfile {
+    width: 1025px;
+    height: 246px;
+    border: 5px dashed #EBEBEC;
+  
+}
+.btn1{
+    margin-top: 71px;
+    margin-bottom: 38px;
+}
