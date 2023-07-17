@@ -1,12 +1,11 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback,useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import * as XLSX from 'xlsx'
-import { Modal, Button } from 'react-bootstrap'
 import "./ImportData.css"
 
 const ImportData = () => {
-  const [show, setShow] = useState(false);
-  const [courseID, setCourseID] = useState("");  // (Year + Term + subj_code)
+
+  const [courseID, setCourseID] = useState(""); //(Year + Term + subj_code)
   const [subj_code, setSubj_code] = useState("");
   const [subj_Name, setSubj_Name] = useState("");
   const [building, setBuilding] = useState("");
@@ -21,12 +20,10 @@ const ImportData = () => {
   const [std_code, setStdCode] = useState([]);
   const [std_name, setStdName] = useState([]);
 
+  //set courseID = (Year + Term + subj_code)
   useEffect(() => {
     setCourseID(Year + Term + subj_code);
   }, [Year, Term, subj_code]);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const onDrop = useCallback(acceptedFiles => {
     acceptedFiles.forEach((file) => {
@@ -105,7 +102,6 @@ const ImportData = () => {
 
         setStdCode(dataB);
         setStdName(dataC);
-        handleShow();  // Show the modal after loading the data
       };
       reader.readAsBinaryString(file);
     });
@@ -115,52 +111,41 @@ const ImportData = () => {
 
   return (
     <div className='container'>
-      <h1>Import ข้อมูลการลงทะเบียนเรียน</h1>
-      <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
-      <div className="importfile" {...getRootProps()}>
-        <input {...getInputProps()} className="hidden-input" />
-        <button className='btn1'>เรียกดูไฟล์</button>
-        <h2>หรือลากมาใส่ในกล่องนี้</h2>
-      </div>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>ข้อมูลการลงทะเบียนเรียน</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h2>รหัสวิชา</h2>
-          <h3>{subj_code}</h3>
-          <h2>ชื่อวิชา</h2>
-          <h3>{subj_Name}</h3>
-          <h2>รหัสนักศึกษา</h2>
-          {std_code.map((item, index) => (
-            <h3 key={index}>{item}</h3>
-          ))}
-          <h2>ชื่อนักศึกษา</h2>
-          {std_name.map((item, index) => (
-            <h3 key={index}>{item}</h3>
-          ))}
-          <h2>ภาคการศึกษาที่</h2>
-          <h3>{Term}</h3>
-          <h2>ปีการศึกษา</h2>
-          <h3>{Year}</h3>
-          <h2>วันเวลาเรียน</h2>
-          <h3>{Day} {time_begin}-{time_end}</h3>
-          <h2>ห้องเรียน</h2>
-          <h3>{building}/{roomID}</h3>
-          <h2>รหัสอาจารย์</h2>
-          <h3>{lectID}</h3>
-          <h2>ชื่ออาจารย์</h2>
-          <h3>{lectName}</h3>
-          <h2>คอร์สID</h2>
-          <h3>{courseID}</h3>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        <h1>Import ข้อมูลการลงทะเบียนเรียน</h1>
+        <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
+        <div className="importfile" {...getRootProps()}>
+           <input {...getInputProps()} className="hidden-input" />
+           <button className='btn1' >เรียกดูไฟล์</button>   
+           <h2>หรือลากมาใส่ในกล่องนี้</h2>
+        </div>
+        <h2>รหัสวิชา</h2>
+        <h3>{subj_code}</h3>
+        <h2>ชื่อวิชา</h2>
+        <h3>{subj_Name}</h3>
+        <h2>รหัสนักศึกษา</h2>
+        {std_code.map((item, index) => (
+          <h3 key={index}>{item}</h3>
+        ))}
+        <h2>ชื่อนักศึกษา</h2>
+        {std_name.map((item, index) => (
+          <h3 key={index}>{item}</h3>
+        ))}
+        <h2>ภาคการศึกษาที่</h2>
+        <h3>{Term}</h3>
+        <h2>ปีการศึกษา</h2>
+        <h3>{Year}</h3>
+        <h2>วันเวลาเรียน</h2>
+        <h3>{Day} {time_begin}-{time_end}</h3>
+        <h2>ห้องเรียน</h2>
+        <h3>{building}/{roomID}</h3>
+        <h2>รหัสอาจารย์</h2>
+        <h3>{lectID}</h3>
+        <h2>ชื่ออาจารย์</h2>
+        <h3>{lectName}</h3>
+        <h2>คอร์สID</h2>
+        <h3>{courseID}</h3>
+        
+        
     </div>
   )
 }
