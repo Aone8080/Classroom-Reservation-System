@@ -3,8 +3,6 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
-const mysql = require("mysql2");
-
 
 
 //middleware
@@ -12,17 +10,20 @@ app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "20mb" }));
 app.use(cors());
 
-// //เชื่อม database
-// const con = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   database: "project_36",
-// });
+// Route 
+app.use('/api', require('./routes/auth')); 
+app.use('/api', require('./routes/room'));        //test good
+app.use('/api', require('./routes/lecturer'));    //test good
+app.use('/api', require('./routes/subject'));     //test good
+app.use('/api', require('./routes/student'));     //test good
+app.use('/api', require('./routes/std_reg_course'));//test good   
+app.use('/api', require('./routes/calendar'));    //test good
+app.use('/api', require('./routes/course'));      //test good
+app.use('/api', require('./routes/importExcel')); //test good
 
 
 
-
-
-app.listen(8080, () => {
-  console.log("Server is running on port 8080");
+app.listen(8000, () => {
+  console.log("Server is running on port 8000");
 });
+

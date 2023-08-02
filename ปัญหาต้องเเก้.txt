@@ -1,2 +1,0 @@
-เพิ่ม status admin/user ในตาราง user
-สร้างฟังชั้นหน้า import อ่านเชพาะไฟล์ xcel
