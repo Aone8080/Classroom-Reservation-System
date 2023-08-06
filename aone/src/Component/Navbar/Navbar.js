@@ -45,7 +45,7 @@ const Navbar = () => {
           <Link to="/data-management" className={location.pathname === "/data-management" ? "active" : ""}>จัดการข้อมูล</Link>
           <Link to="/booking-approval" className={location.pathname === "/booking-approval" ? "active" : ""}>ตรวจสอบคำร้องขอจองห้องเรียน</Link>
           <div className="dropdown">
-            <Link>นาย เอวัน โอโบโม <FaChevronDown/></Link>
+            <Link>  Admin <FaChevronDown/></Link>
             <div className="dropdown-content">
               <div className="itemDD">
                 <Link to="/edit-profile" >
@@ -66,7 +66,7 @@ const Navbar = () => {
           <Link to="/booking" className={location.pathname === "/booking" ? "active" : ""}>จองห้องเรียน</Link>
           <Link to="/booking-history" className={location.pathname === "/booking-history" ? "active" : ""}>ประวัติการจองห้องเรียน</Link>
           <div className="dropdown">
-            <Link>นาย เอวัน โอโบโม <FaChevronDown/></Link>
+            <Link>อาจารย์ {user.lectName} <FaChevronDown/></Link>
             <div className="dropdown-content">
               <div className="itemDD">
                 <Link to="/edit-profile" >

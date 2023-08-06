@@ -2,23 +2,46 @@ import React, { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import * as XLSX from "xlsx";
 import { Modal, Button } from "react-bootstrap";
+//redux
+import { useSelector } from "react-redux";  
+//function
+import{importStudent} from "../../functions/importExcel"
 
 const ImportStudent = () => {
+  const { user } = useSelector((state) => ({ ...state }));
   //module
   const [showModal, setShowModal] = useState(false);
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
-
+  
+  //สาขายังไม่มี
+  const [major_id,setMajor_id] = useState("2519");
+  const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");
+  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
   const [std_code, setStdCodes] = useState([]);
   const [std_name, setStdNames] = useState([]);
 
-  //สาขายังไม่มี
-  const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");
-  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
+  const handleSubmit =(e)=>{
+    e.preventDefault();
+   const value ={
+   major_id,
+   major_name,
+   std_code,
+   std_name
+  };
+  importStudent(user.token, value) 
+  .then((res)=>{
+    console.log(res);
+    alert("Import Student Success"); 
+    handleModalClose();
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+  };
 
   const onDrop = useCallback((acceptedFiles) => {
     const reader = new FileReader();
-
     reader.onabort = () => console.log("file reading was aborted");
     reader.onerror = () => console.log("file reading has failed");
     reader.onload = () => {
@@ -43,19 +66,18 @@ const ImportStudent = () => {
         dataB.push(combinedCode);
         dataE.push(cellE ? cellE.v : ""); // get cell Ei value or empty string if undefined
       }
-
-      const filteredDataB = dataB.filter((item) => item !== ""); // filter ช่องว่างใน array ออก
+      // filter ช่องว่างใน array ออก
+      const filteredDataB = dataB.filter((item) => item !== "");
       const filteredDataE = dataE.filter((item) => item !== "");
 
-      setStdCodes(filteredDataB);
+      setStdCodes(filteredDataB);//2.set ลง state
       setStdNames(filteredDataE);
     };
-
     reader.readAsBinaryString(acceptedFiles[0]);
     handleModalShow();
   }, []);
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
 
   return (
     <div className="h-container">
@@ -116,7 +138,7 @@ const ImportStudent = () => {
           <Button variant="secondary" onClick={handleModalClose}>
             Close
           </Button>
-          <Button variant="primary">Save Changes</Button>
+          <Button variant="primary" onClick={handleSubmit} >บันทึกข้อมูล</Button>
         </Modal.Footer>
       </Modal>
     </div>

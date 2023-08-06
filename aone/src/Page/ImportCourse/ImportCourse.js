@@ -2,69 +2,82 @@ import React, { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import * as XLSX from "xlsx";
 import "./ImportCourse.css";
-// functions
-import { importCourse } from "../../functions/importCourse";
-//react-bootstrap
 import { Modal, Button } from "react-bootstrap";
+//redux
+import { useSelector } from "react-redux";
+//function
+import{importCourse} from "../../functions/importExcel"
+
 
 const ImportCourse = () => {
+  const { user } = useSelector((state) => ({ ...state }));
+  //module
   const [showModal, setShowModal] = useState(false);
-
-  const [courseID, setCourseID] = useState(""); //(Year + Term + subj_code)
-  const [subj_code, setSubj_code] = useState("");
-  const [subj_Name, setSubj_Name] = useState("");
-  const [building, setBuilding] = useState("");
-  const [roomID, setRoomID] = useState("");
-  const [Year, setYear] = useState("");
-  const [Term, setTerm] = useState("");
-  const [Day, setDay] = useState("");
-  const [time_begin, setTime_begin] = useState("");
-  const [time_end, setTime_end] = useState("");
-  const [lectID, setLectID] = useState("");
-  const [lectName, setLectName] = useState("");
-  const [std_code, setStdCode] = useState([]);
-  const [std_name, setStdName] = useState([]);
-
-  //สาขายังไม่มี
-  const [major_id, setMajor_id] = useState("2519"); //
-  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
-
-  //set courseID = (Year + Term + subj_code)
-  useEffect(() => {
-    setCourseID(Year + Term + subj_code);
-  }, [Year, Term, subj_code]);
-
-  const handleSubmit = () => {
-    const value = {
-      courseID,
-      subj_code,
-      subj_Name,
-      building,
-      roomID,
-      Year,
-      Term,
-      Day,
-      time_begin,
-      time_end,
-      lectID,
-      lectName,
-      std_code,
-      std_name,
-      major_id,
-      major_name,
-    };
-
-    importCourse(value)
-      .then((res) => {
-        console.log(res.data);
-        alert("Import Success");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
-  };
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
+
+  //สาขายังไม่มี data ที่ยังไม่มี
+  const [major_id,setMajor_id] = useState("2519");
+  const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");
+  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
+  const [roomtype_id, setRoomtype_id] = useState("1"); //1 ห้องเรียนค่าเริ่มต้น
+  const [capacity, setCapacity] = useState("60");      
+
+  const [subj_code, setSubj_code] = useState("");
+  const [subj_name, setSubj_name] = useState("");
+  const [course_id, setCourse_id] = useState(""); //(Year + Term + subj_code) 
+  const [room_id, setRoom_id] = useState("");
+  const [Years, setYears] = useState("");
+  const [Term, setTerm] = useState("");
+  const [day, setDay] = useState("");
+  const [time_begin, setTime_begin] = useState("");
+  const [time_end, setTime_end] = useState("");
+  const [lect_id, setLect_id] = useState("");
+  const [lect_name, setLect_name] = useState("");
+  const [std_code, setStdCode] = useState([]);
+  const [std_name, setStdName] = useState([]); 
+
+
+  
+  const [building, setBuilding] = useState("");
+
+   //set courseID = (Year + Term + subj_code)
+   useEffect(() => {
+    setCourse_id(Years + Term + subj_code);
+  }, [Years, Term, subj_code]);
+
+  const handleSubmit =(e)=>{
+    e.preventDefault();
+   const value ={
+    subj_code,
+    subj_name,
+    course_id,
+    room_id,
+    roomtype_id,
+    building,
+    capacity,
+    Years,
+    Term,
+    day,
+    time_begin,
+    time_end,
+    lect_id,
+    lect_name,
+    std_code,
+    std_name,
+    major_id,
+    major_name,
+  };
+  importCourse(user.token, value) 
+  .then((res)=>{
+    console.log(res);
+    alert("Import Course Success"); 
+    handleModalClose();
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+  };
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -86,7 +99,7 @@ const ImportCourse = () => {
           );
           if (match) {
             setTerm(match[1]);
-            setYear(match[2]);
+            setYears(match[2]);
           }
         }
 
@@ -96,8 +109,8 @@ const ImportCourse = () => {
           const lect = lectCell.v;
           const match = lect.match(/ชื่อ-สกุลอาจารย์ : (\d+) - (.+)/);
           if (match) {
-            setLectID(match[1]);
-            setLectName(match[2].trim());
+            setLect_id(match[1]);
+            setLect_name(match[2].trim());
           }
         }
 
@@ -108,11 +121,11 @@ const ImportCourse = () => {
           const match = subj.match(/ชื่อวิชา : (\w+)\s+(.+) :/);
           if (match) {
             setSubj_code(match[1]);
-            setSubj_Name(match[2].trim());
+            setSubj_name(match[2].trim());
           }
         }
 
-        // Parse Day, time_begin, time_end, building, and roomID from the 8th row
+        // Parse Day, time_begin, time_end, building, and room_id from the 8th row
         const scheduleCell = worksheet["A8"];
         if (scheduleCell) {
           const schedule = scheduleCell.v;
@@ -124,7 +137,7 @@ const ImportCourse = () => {
             setTime_begin(match[2]);
             setTime_end(match[3]);
             setBuilding(match[4]);
-            setRoomID(match[5]);
+            setRoom_id(match[5]);
           }
         }
 
@@ -144,7 +157,6 @@ const ImportCourse = () => {
             dataC.push(cellC ? cellC.v : ""); // get cell Ci value or empty string if undefined
           }
         }
-        
         // filter ช่องว่างใน array ออก
         const filteredDataB = dataB.filter((item) => item !== ""); 
         const filteredDataC = dataC.filter((item) => item !== "");
@@ -154,9 +166,8 @@ const ImportCourse = () => {
       };
       reader.readAsBinaryString(file);
     });
-    handleModalShow();
+    handleModalShow();  
   }, []);
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
@@ -181,7 +192,7 @@ const ImportCourse = () => {
         </Modal.Header>
         <Modal.Body>
           <h3 className="titleModal2">
-            ปีการศึกษา : {Year} ภาคการศึกษาที่ : {Term}
+            ปีการศึกษา : {Years} ภาคการศึกษาที่ : {Term}
           </h3>
           <div class="container text-center">
             <div class="row">
@@ -189,20 +200,20 @@ const ImportCourse = () => {
                 <h3 className="title">รหัสวิชา</h3>
                 <h3 className="dec">{subj_code}</h3>
                 <h3 className="title">รหัสอาจารย์</h3>
-                <h3 className="dec">{lectID}</h3>
+                <h3 className="dec">{lect_id}</h3>
                 <h3 className="title">วันเวลาเรียน</h3>
                 <h3 className="dec">
-                  {Day} {time_begin}-{time_end}
+                  {day} {time_begin}-{time_end}
                 </h3>
               </div>
               <div class="col text-start">
                 <h3 className="title">ชื่อวิชา</h3>
-                <h3 className="dec">{subj_Name}</h3>
+                <h3 className="dec">{subj_name}</h3>
                 <h3 className="title">ชื่อ-นามสกุลอาจารย์</h3>
-                <h3 className="dec">{lectName}</h3>
+                <h3 className="dec">{lect_name}</h3>
                 <h3 className="title">ห้องเรียน</h3>
                 <h3 className="dec">
-                  {building}/{roomID}
+                  {building}/{room_id}
                 </h3>
               </div>
             </div>

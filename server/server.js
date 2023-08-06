@@ -20,7 +20,7 @@ app.use('/api', require('./routes/std_reg_course'));//test good
 app.use('/api', require('./routes/calendar'));    //test good
 app.use('/api', require('./routes/course'));      //test good
 app.use('/api', require('./routes/importExcel')); //test good
-
+app.use('/api', require('./routes/reservation')); 
 
 
 app.listen(8000, () => {

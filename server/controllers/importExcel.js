@@ -57,7 +57,11 @@ exports.importAllStudent = async (req, res) => {
 
 
 exports.importCourse = async (req, res) => {
-    const { subj_code, subj_name, course_id, room_id, Years, Term, day, time_begin, time_end, lect_id, lect_name, std_code } = req.body;
+    const { subj_code, subj_name, course_id, room_id,
+         Years, Term, day, time_begin, time_end,
+          lect_id, lect_name, std_code, roomtype_id,
+           capacity, building,major_id,major_name, std_name} = req.body;
+
     const queries = [];
 
     // 1. Insert subject
@@ -82,7 +86,29 @@ exports.importCourse = async (req, res) => {
     });
     queries.push(insertSubjectQuery);
 
-    // 2. Insert course
+    // 2. Insert into room
+    const insertRoomQuery = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM room WHERE room_id = ?', [room_id], (error, results) => {
+            if (error) {
+                  reject(error);
+            } else if (results.length > 0) {
+           // If the room_id already exists, skip this insertion.
+              resolve();
+           } else {
+           // If the room_id does not exist, proceed with the insertion.
+           db.query('INSERT INTO room (room_id, roomtype_id, capacity, building) VALUES (?, ?, ?, ?)', [room_id, roomtype_id, capacity, building], (error, results) => {
+               if (error) {
+                   reject(error);
+               } else {
+                   resolve(results);
+               }
+               });
+            }
+           });
+    });
+      queries.push(insertRoomQuery);
+
+    // 3. Insert course
     const insertCourseQuery = new Promise((resolve, reject) => {
         db.query('SELECT * FROM course WHERE course_id = ?', [course_id], (error, results) => {
             if (error) {
@@ -104,7 +130,7 @@ exports.importCourse = async (req, res) => {
     });
     queries.push(insertCourseQuery);
 
-    // 3. Insert lecturer
+    // 4. Insert lecturer
     const insertLecturerQuery = new Promise((resolve, reject) => {
         db.query('SELECT * FROM lecturer WHERE lect_id = ?', [lect_id], (error, results) => {
             if (error) {
@@ -126,7 +152,7 @@ exports.importCourse = async (req, res) => {
     });
     queries.push(insertLecturerQuery);
 
-    // 4. Insert into teach
+    // 5. Insert into teach
     const insertTeachQuery = new Promise((resolve, reject) => {
         db.query('SELECT * FROM teach WHERE lect_id = ? AND course_id = ?', [lect_id, course_id], (error, results) => {
             if (error) {
@@ -147,8 +173,56 @@ exports.importCourse = async (req, res) => {
         });
     });
     queries.push(insertTeachQuery);
+    
+    // 6. Insert into major
+    const insertMajorQuery = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM major WHERE major_id = ?', [major_id], (error, results) => {
+            if (error) {
+                reject(error);
+            } else if (results.length > 0) {
+                // If the major_id already exists, skip this insertion.
+                resolve();
+            } else {
+                // If the major_id does not exist, proceed with the insertion.
+                db.query('INSERT INTO major (major_id, major_name) VALUES (?, ?)', [major_id, major_name], (error, results) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            }
+        });
+    });
+    queries.push(insertMajorQuery);
 
-    // 5. Insert into std_reg_course
+    
+    
+   // 7. Insert into student (new section)
+for (let i = 0; i < std_code.length; i++) {
+    const query = new Promise((resolve, reject) => {
+        db.query('SELECT * FROM student WHERE std_code = ?', [std_code[i]], (error, results) => {
+            if (error) {
+                reject(error);
+            } else if (results.length > 0) {
+                resolve(); // Skip if std_code exists
+            } else {
+                const createStudentSql = "INSERT INTO student (std_code, major_id, std_name) VALUES (?, ?, ?)";
+                db.query(createStudentSql, [std_code[i], major_id, std_name[i]], (error, results) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            }
+        });
+    });
+    queries.push(query);
+}
+
+
+    // 8. Insert into std_reg_course
     for (let i = 0; i < std_code.length; i++) {
         const query = new Promise((resolve, reject) => {
             db.query('SELECT * FROM std_reg_course WHERE std_code = ? AND course_id = ?', [std_code[i], course_id], (error, results) => {
