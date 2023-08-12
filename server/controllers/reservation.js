@@ -1,127 +1,147 @@
-const db = require('../db');
+const db = require("../db");
 
 exports.findAvailableTimeSlots = async (req, res) => {
-    const { course_id,lect_id } = req.body;
-  
-    try {
-      // 1. ดึงข้อมูล std_code ทั้งหมดที่ลงทะเบียนในคอร์ส course_id
-      const regQuery = `
-        SELECT std_code
-        FROM std_reg_course
-        WHERE course_id = ?`;
-      const [regRows, regFields] = await db.promise().execute(regQuery, [course_id]);
-  
-      // 2. สร้าง object เพื่อเก็บข้อมูลวันว่างในรูปแบบ day/am/pm
-      const scheduleObject = {
-        "จันทร์": { am: 0, pm: 0 },
-        "อังคาร": { am: 0, pm: 0 },
-        "พุธ": { am: 0, pm: 0 },
-        "พฤหัสบดี": { am: 0, pm: 0 },
-        "ศุกร์": { am: 0, pm: 0 }
-      };
-  
-      // 3. วน loop ใน std_code ทั้งหมดที่ลงทะเบียนในคอร์ส
-      for (const regRow of regRows) {
-        const stdQuery = `
-          SELECT c.day, c.time_begin, c.time_end
-          FROM course c
-          WHERE c.course_id IN (SELECT course_id FROM std_reg_course WHERE std_code = ?)`;
-        const [stdRows, stdFields] = await db.promise().execute(stdQuery, [regRow.std_code]);
-  
-        // 4. วน loop ในคอร์สที่นักศึกษาลงทะเบียนเพื่อตรวจสอบวันว่าง
-        for (const stdRow of stdRows) {
-          const day = stdRow.day;
-          const amAvailable = stdRow.time_begin < '12:00' && stdRow.time_end <= '12:00';
-          const pmAvailable = stdRow.time_begin >= '12:00' || stdRow.time_end > '12:00';
-  
-          if (amAvailable) {
-            scheduleObject[day].am = 1;
-          }
-          if (pmAvailable) {
-            scheduleObject[day].pm = 1;
-          }
-        }
+  try {
+    const { course_id, lect_id, start_date, end_date } = req.body;
+
+    //----------------------------------------------lect----------------------------------------------------------
+    // สร้าง Object เพื่อเก็บข้อมูลวันว่างของอาจารย์
+    const lectScheduleObject = {
+      จันทร์: { AM: 0, PM: 0 },
+      อังคาร: { AM: 0, PM: 0 },
+      พุธ: { AM: 0, PM: 0 },
+      พฤหัสบดี: { AM: 0, PM: 0 },
+      ศุกร์: { AM: 0, PM: 0 },
+    };
+
+    // ดึงข้อมูลตารางสอนของอาจารย์จากฐานข้อมูล
+    const teachScheduleQuery =
+      "SELECT c.day, c.time FROM Teach t JOIN Course c ON t.course_id = c.course_id WHERE t.lect_id = ?";
+    const [teachRows, _teachFields] = await db
+      .promise()
+      .query(teachScheduleQuery, [lect_id]);
+
+    // นำข้อมูลตารางสอนมาใส่ใน Object ของอาจารย์
+    for (const row of teachRows) {
+      const { day, time } = row;
+      if (time === "AM") {
+        lectScheduleObject[day].AM = 1;
+      } else if (time === "PM") {
+        lectScheduleObject[day].PM = 1;
       }
-  
-      // 5. แปลง object เป็น array และส่งข้อมูลกลับไปยังหน้าบ้าน
-      const scheduleArray = Object.entries(scheduleObject).map(([day, schedule]) => ({
-        day,
-        am: schedule.am,
-        pm: schedule.pm
-      }));
-  
-      // 6. รับ const { lect_id } = req.body; (Code ด้านบน)
-      const teachQuery = `
-        SELECT course_id
-        FROM teach
-        WHERE lect_id = ?`;
-      const [teachRows, teachFields] = await db.promise().execute(teachQuery, [lect_id]);
-  
-      // 7. สร้าง object เพื่อเก็บข้อมูลวันว่างของอาจารย์ในรูปแบบ day/am/pm
-      const lectScheduleObject = {
-        "จันทร์": { am: 0, pm: 0 },
-        "อังคาร": { am: 0, pm: 0 },
-        "พุธ": { am: 0, pm: 0 },
-        "พฤหัสบดี": { am: 0, pm: 0 },
-        "ศุกร์": { am: 0, pm: 0 }
-      };
-  
-      // 8. วน loop ใน course_id ทั้งหมดที่อาจารย์สอน
-      for (const teachRow of teachRows) {
-        const courseQuery = `
-          SELECT c.day, c.time_begin, c.time_end
-          FROM course c
-          WHERE c.course_id = ?`;
-        const [courseRows, courseFields] = await db.promise().execute(courseQuery, [teachRow.course_id]);
-  
-        // 9. วน loop ใน course ที่อาจารย์สอนเพื่อตรวจสอบวันว่าง
-        for (const courseRow of courseRows) {
-          const day = courseRow.day;
-          const amAvailable = courseRow.time_begin < '12:00' && courseRow.time_end <= '12:00';
-          const pmAvailable = courseRow.time_begin >= '12:00' || courseRow.time_end > '12:00';
-  
-          if (amAvailable) {
-            lectScheduleObject[day].am = 1;
-          }
-          if (pmAvailable) {
-            lectScheduleObject[day].pm = 1;
-          }
-        }
-      }
-  
-  
-      // 10. แปลง object เป็น array และส่งข้อมูลกลับไปยังหน้าบ้าน
-      const lectScheduleArray = Object.entries(lectScheduleObject).map(([day, schedule]) => ({
-        day,
-        am: schedule.am,
-        pm: schedule.pm
-      }));
-  
-      // 11. สร้าง object ใหม่เพื่อเก็บผลการเปรียบเทียบ studentSchedule กับ lecturerSchedule
-      const comparisonResult = {};
-      for (const day of Object.keys(scheduleObject)) {
-        comparisonResult[day] = {
-          am: scheduleObject[day].am === lectScheduleObject[day].am ? scheduleObject[day].am : 1,
-          pm: scheduleObject[day].pm === lectScheduleObject[day].pm ? scheduleObject[day].pm : 1,
-        };
-      }
-  
-      // 12. แปลง object เป็น array และส่งข้อมูลกลับไปยังหน้าบ้าน
-      const comparisonArray = Object.entries(comparisonResult).map(([day, schedule]) => ({
-        day,
-        am: schedule.am,
-        pm: schedule.pm
-      }));
-  
-      // 13. ส่งข้อมูลกลับไปยังหน้าบ้าน
-      res.json({ studentSchedule: scheduleArray, lecturerSchedule: lectScheduleArray, comparisonSchedule: comparisonArray });
-  
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while fetching data' });
     }
-  };
-  
-  
-  
-  
-  
+
+    const reservationQueryLecturer =
+      "SELECT reservation_date, reservation_time FROM Reservation WHERE user_id = ? AND reservation_date BETWEEN ? AND ?";
+    const [reservationRows, _reservationFields] = await db
+      .promise()
+      .query(reservationQueryLecturer, [lect_id, start_date, end_date]);
+
+    for (const row of reservationRows) {
+      const { reservation_date, reservation_time } = row;
+      const day = getDayFromDate(reservation_date);
+      if (day && lectScheduleObject[day]) {
+        if (reservation_time === "AM") {
+          lectScheduleObject[day].AM = 1;
+        } else if (reservation_time === "PM") {
+          lectScheduleObject[day].PM = 1;
+        }
+      }
+    }
+    //----------------------------------------------student----------------------------------------------------------
+
+    // สร้าง Object เพื่อเก็บข้อมูลวันว่างของนักเรียน
+    const student_schedule = {
+      จันทร์: { AM: 0, PM: 0 },
+      อังคาร: { AM: 0, PM: 0 },
+      พุธ: { AM: 0, PM: 0 },
+      พฤหัสบดี: { AM: 0, PM: 0 },
+      ศุกร์: { AM: 0, PM: 0 },
+    };
+
+    // ดึงข้อมูลนักเรียนที่ลงทะเบียนในคอร์สนี้
+    const regQuery = `
+      SELECT std_code
+      FROM std_reg_course
+      WHERE course_id = ?`;
+    const [regRows, _regFields] = await db
+      .promise()
+      .execute(regQuery, [course_id]);
+
+    // วนลูปเพื่อหาข้อมูลวันว่างของนักเรียน
+    for (const regRow of regRows) {
+      const stdQuery = `
+        SELECT c.day, c.time
+        FROM course c
+        WHERE c.course_id IN (SELECT course_id FROM std_reg_course WHERE std_code = ?)`;
+      const [stdRows, _stdFields] = await db
+        .promise()
+        .execute(stdQuery, [regRow.std_code]);
+
+      // นำข้อมูลวันว่างของนักเรียนมาใส่ใน Object
+      for (const stdRow of stdRows) {
+        const { day, time } = stdRow;
+        if (time === "AM") {
+          student_schedule[day].AM = 1;
+        } else if (time === "PM") {
+          student_schedule[day].PM = 1;
+        }
+      }
+    }
+    
+   //ค้นหาทุกคอร์สที่นักศึกษาในคอร์สตัวนี้ลงทะเบียนเรียนเพิ่มเติมในตาราง Reservation
+    const reservationQueryStudent = `
+  SELECT reservation_date, reservation_time
+  FROM Reservation r
+  JOIN std_reg_course sr ON r.course_id = sr.course_id
+  WHERE sr.std_code IN (
+    SELECT std_code
+    FROM std_reg_course
+    WHERE course_id = ?
+  ) AND reservation_date BETWEEN ? AND ?`;
+    const [reservationRowsStudent, _reservationFieldsStudent] = await db
+      .promise()
+      .execute(reservationQueryStudent, [course_id, start_date, end_date]);
+
+    // นำข้อมูลการจองมาใส่ใน Object ของนักเรียน
+    for (const row of reservationRowsStudent) {
+      const { reservation_date, reservation_time } = row;
+      const day = getDayFromDate(reservation_date);
+      if (day && student_schedule[day]) {
+        if (reservation_time === "AM") {
+          student_schedule[day].AM = 1;
+        } else if (reservation_time === "PM") {
+          student_schedule[day].PM = 1;
+        }
+      }
+    }
+
+    // ส่ง JSON กับข้อมูลว่างเวลาของอาจารย์และนักเรียนในคอร์สนี้ทุกคนกลับไปที่เว็บไซต์
+    res.json({
+      lecturer_schedule: lectScheduleObject,
+      student_schedule: student_schedule,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while fetching the available time slots.",
+      });
+  }
+};
+
+function getDayFromDate(date) {
+  const dayNames = [
+    "อาทิตย์",
+    "จันทร์",
+    "อังคาร",
+    "พุธ",
+    "พฤหัสบดี",
+    "ศุกร์",
+    "เสาร์",
+  ];
+  const jsDate = new Date(date);
+  const dayIndex = jsDate.getDay(); // 0 = อาทิตย์, 1 = จันทร์, ...
+  return dayNames[dayIndex];
+}

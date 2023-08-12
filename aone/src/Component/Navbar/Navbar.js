@@ -66,7 +66,7 @@ const Navbar = () => {
           <Link to="/booking" className={location.pathname === "/booking" ? "active" : ""}>จองห้องเรียน</Link>
           <Link to="/booking-history" className={location.pathname === "/booking-history" ? "active" : ""}>ประวัติการจองห้องเรียน</Link>
           <div className="dropdown">
-            <Link>อาจารย์ {user.lectName} <FaChevronDown/></Link>
+            <Link>อาจารย์ {user.userName} <FaChevronDown/></Link>
             <div className="dropdown-content">
               <div className="itemDD">
                 <Link to="/edit-profile" >

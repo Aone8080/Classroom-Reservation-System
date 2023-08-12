@@ -44,7 +44,7 @@ const Login = () => {
             token: res.data.token,
             username: res.data.payload.user.username,
             lectID: res.data.payload.user.lectID,
-            lectName: res.data.payload.user.lectName, 
+            userName: res.data.payload.user.userName, 
             role: res.data.payload.user.role,
           },
         });
