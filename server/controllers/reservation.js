@@ -88,7 +88,7 @@ exports.findAvailableTimeSlots = async (req, res) => {
         }
       }
     }
-    
+
    //ค้นหาทุกคอร์สที่นักศึกษาในคอร์สตัวนี้ลงทะเบียนเรียนเพิ่มเติมในตาราง Reservation
     const reservationQueryStudent = `
   SELECT reservation_date, reservation_time
@@ -116,10 +116,37 @@ exports.findAvailableTimeSlots = async (req, res) => {
       }
     }
 
+    //รวม Object student_schedule และ lectScheduleObject เข้าด้วยกัน
+    const combinedSchedule = {
+      จันทร์: {
+        AM: student_schedule["จันทร์"].AM || lectScheduleObject["จันทร์"].AM,
+        PM: student_schedule["จันทร์"].PM || lectScheduleObject["จันทร์"].PM,
+      },
+      อังคาร: {
+        AM: student_schedule["อังคาร"].AM || lectScheduleObject["อังคาร"].AM,
+        PM: student_schedule["อังคาร"].PM || lectScheduleObject["อังคาร"].PM,
+      },
+      พุธ: {
+        AM: student_schedule["พุธ"].AM || lectScheduleObject["พุธ"].AM,
+        PM: student_schedule["พุธ"].PM || lectScheduleObject["พุธ"].PM,
+      },
+      พฤหัสบดี: {
+        AM: student_schedule["พฤหัสบดี"].AM || lectScheduleObject["พฤหัสบดี"].AM,
+        PM: student_schedule["พฤหัสบดี"].PM || lectScheduleObject["พฤหัสบดี"].PM,
+      },
+      ศุกร์: {
+        AM: student_schedule["ศุกร์"].AM || lectScheduleObject["ศุกร์"].AM,
+        PM: student_schedule["ศุกร์"].PM || lectScheduleObject["ศุกร์"].PM,
+      },
+    };
+
+
+
     // ส่ง JSON กับข้อมูลว่างเวลาของอาจารย์และนักเรียนในคอร์สนี้ทุกคนกลับไปที่เว็บไซต์
     res.json({
       lecturer_schedule: lectScheduleObject,
       student_schedule: student_schedule,
+      combinedSchedule:combinedSchedule
     });
   } catch (error) {
     console.error("Error:", error);
