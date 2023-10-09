@@ -1,12 +1,9 @@
-//store
+
 import { combineReducers } from "redux";
-import { userReducer } from "./userReducer";
-
-
+import { userReducer2 } from "./userReducer2"; // ใช้ชื่อ userReducer2 แทน
 
 const rootReducer = combineReducers({
-  user: userReducer,
-                        
+  user: userReducer2, 
 });
 
-export default rootReducer
+export default rootReducer;

@@ -42,6 +42,23 @@ exports.readRoom = async (req, res) => {
 };
 
 
+//----readAllRoomBYType_id
+exports.readAllRoomByRoomType_id = async (req, res) => {
+    const { id } = req.params;
+    const sql = "SELECT * FROM room WHERE roomtype_id = ?";
+    db.query(sql, id, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error });
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No room type found with this ID." });
+        }
+        res.status(200).json(results); 
+    });
+};
+
+
+
 //----deleteRoom
 exports.deleteRoom = async (req, res) => {
   const { id } = req.params;

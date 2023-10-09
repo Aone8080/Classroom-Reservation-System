@@ -2,7 +2,12 @@ import React from 'react'
 
 const SinglePageBookingApproval = () => {
   return (
-    <div>SinglePageBookingApproval</div>
+    <>
+    <h1 className="big-title text-center">รายละเอียดของการจอง</h1>
+    <div className="container-main">
+      
+    </div>
+    </>
   )
 }
 

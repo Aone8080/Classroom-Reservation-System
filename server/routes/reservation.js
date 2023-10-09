@@ -1,14 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
-const {findAvailableTimeSlots} = require('../controllers/reservation');
+const {
+    findAvailableTimeSlots,
+    createReservation,
+    readAllReservation,
+    readReservationByDate,
+    readReservationById,
+    readReservationByRoomId,
+    deleteReservation,
+  } = require("../controllers/reservation");
 
 // middleware 
 const { authCheck,adminCheck } = require("../middleware/auth");
 
 
-//router.post('/reservation',authCheck, adminCheck, findAvailableTimeSlots);
-router.post('/reservation', findAvailableTimeSlots);  
 
-
+router.post('/reservation/findDayTime', findAvailableTimeSlots);    //หาวันเวลาว่าง 
+router.post('/reservation', createReservation);                     //จองห้อง
+router.get('/reservation', readAllReservation);                     //อ่านประวัติการจองทั้งหมด
+router.get('/reservationbydate', readReservationByDate);            //อ่านประวัติการจองจากวันที่
+router.get('/reservation/byuserid/:id', readReservationById);       //อ่านประวัติการจองจาก user_id
+router.get('/reservation/byroomid/:id', readReservationByRoomId);   //อ่านประวัติการจองจาก room_id
+router.delete('/reservation/:id', deleteReservation);               //ลบการจอง
 module.exports = router;

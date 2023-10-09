@@ -25,6 +25,28 @@ exports.readCourse = async (req, res) => {
 };
 
 
+// --- readCoursesByLecturer     
+exports.readCoursesByLecturer = async (req, res) => {
+  const { lect_id, years, term } = req.body;
+  const sql = `
+    SELECT c.course_id, c.subj_code, s.subj_name, c.room_id 
+    FROM course c
+    JOIN Teach t ON c.course_id = t.course_id
+    JOIN Subject s ON c.subj_code = s.subj_code
+    WHERE t.lect_id = ? AND c.Years = ? AND c.Term = ?
+  `;
+  db.query(sql, [lect_id, years, term], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json(results);
+  });
+};
+
+
+
+
+
 
 //----deleteCourse
 exports.deleteCourse = async (req, res) => {

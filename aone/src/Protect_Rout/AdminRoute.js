@@ -23,6 +23,7 @@ const AdminRoute = ({children}) => {
         })
     }   
     },[user])
+    //console.log(user.token);
 
     return ok //if ok
     ? children               //if ok = true go to  <HomeAdmin /> 

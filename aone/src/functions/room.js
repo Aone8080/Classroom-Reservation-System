@@ -28,6 +28,18 @@ export const readRoom = async (authtoken,id) => {
   });
 };
 
+//----readAllRoomType 
+  export const readAllRoomsType = async () =>
+  await axios.get(process.env.REACT_APP_API + "/roomtype");
+
+
+//----readAllroomByRoomtype_id
+export const readAllroomByRoomtype = async (id) =>
+await axios.get(`${process.env.REACT_APP_API}/roombyroomtype/${id}`);
+
+
+
+
 
 //----updateRoom   //todo testgood
 export const updateRoom= async (authtoken, id, values) => {

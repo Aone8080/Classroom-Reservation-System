@@ -8,7 +8,7 @@ import { currentUser } from "./functions/auth";
 import Home from "./Page/Home/Home"
 import HomeUser from "./Page/HomeUser/HomeUser";
 import Login from "./Page/Login/Login";
-import Calendar from "./Page/Calendar/Calendar";
+import MyCalendar from "./Page/MyCalendar/MyCalendar";
 import Booking from "./Page/Booking/Booking";
 import SinglePageBooking from "./Page/SinglePageBooking/SinglePageBooking";
 import BookingHistory from "./Page/BookingHistory/BookingHistory";
@@ -31,20 +31,21 @@ function App() {
   const idtoken = localStorage.token;     //get Token from LocalStorage 
   if (idtoken) {                          //if have Token
     currentUser(idtoken)                  //Is function send Token to decoded  before check Token
-      .then((res) => {   
-        //console.log(res.data);          // get res.data (Is Data of User  passed decoded or verify) 
+      .then((res) => {                    // get res.data (Is Data of User  passed decoded or verify) 
         dispatch({  
           type: "LOGIN",
           payload: {
             token: idtoken,              //set idtoken in REDUX
-            username: res.data.username, //set res.data in REDUX
+            username: res.data.user_id, //set res.data in REDUX
+            userName: res.data.user_name,
             role: res.data.role,        
           },
-        });
+        })
       })
       .catch((err) => {   
         console.log(err);
       });
+      
   }
 
   return (
@@ -55,7 +56,7 @@ function App() {
         <Route path="/"                 element={<Home/>} />
         <Route path="/login"            element={<Login />} />
         <Route path="/user/index"       element={<UserRoute>  <HomeUser />   </UserRoute>}/>
-        <Route path="/calendar"         element={<Calendar />} />
+        <Route path="/calendar"         element={<MyCalendar />} />
         <Route path="/booking"          element={<Booking />} />
         <Route path="/booking/:id"      element={<SinglePageBooking />} />
         <Route path="/booking-history"  element={<BookingHistory />} />

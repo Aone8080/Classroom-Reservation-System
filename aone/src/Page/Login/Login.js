@@ -37,13 +37,12 @@ const Login = () => {
     e.preventDefault();
     login(value)
       .then((res) => {
-        alert(res.data.payload.user.username + " Login Success");
+        alert(res.data.payload.user.userName + " Login Success");
         dispatch({
           type: "LOGIN",
           payload: {
             token: res.data.token,
             username: res.data.payload.user.username,
-            lectID: res.data.payload.user.lectID,
             userName: res.data.payload.user.userName, 
             role: res.data.payload.user.role,
           },

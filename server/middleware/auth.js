@@ -5,17 +5,21 @@ const db = require('../db');
 exports.authCheck = (req, res, next) => { 
   try {
     const token = req.headers["authtoken"]; // get the token sent from the header
+    //console.log(token);
     if (!token) { // if don't have token
       return res.status(401).send("No token, authorization denied");
     }               
     const decoded = jwt.verify(token, "jwtSecret"); // verify the token
     req.user = decoded.user; // set the user property in request
+    
     next(); // go to the next middleware
   } catch (err) {
     console.log(err);
     res.status(401).send("Token Invalid!!");
   }
 };
+
+
 
 // adminCheck  (checks the user role)
 exports.adminCheck = (req, res, next) => {

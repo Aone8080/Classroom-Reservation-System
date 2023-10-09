@@ -1,17 +1,16 @@
 
-// userReducer  
-export function userReducer(state = null, action) {
+// userReducer.js (โปรเจกต์ที่ 2)
+export function userReducer2(state = null, action) {
   switch (action.type) {
-    case "LOGIN":             
-      return action.payload;  
-    case "LOGOUT":            
-      localStorage.clear()   
-      return action.payload;  
+    case "LOGIN":
+      return action.payload;
+    case "LOGOUT":
+      localStorage.clear();
+      return action.payload;
     default:
       return state;
   }
 }
-
      
   
 // dispatch({                                                

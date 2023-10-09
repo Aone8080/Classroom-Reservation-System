@@ -59,7 +59,6 @@ exports.login = async (req, res) => {
           const payload = {
             user: {
               username: user.user_id,
-              lectID: user.user_id,
               userName: user.user_name,
               role: user.role,
             },
@@ -92,7 +91,7 @@ exports.currentUser = async (req, res) => {
 
       // We select the first (and should be only) user from the results
       const user = results[0];
-
+      
       // We remove the password from the user object before sending it
       delete user.password;
 

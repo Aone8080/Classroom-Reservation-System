@@ -4,7 +4,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 
-
 //middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json({ limit: "20mb" }));
@@ -20,7 +19,7 @@ app.use('/api', require('./routes/std_reg_course'));//test good
 app.use('/api', require('./routes/calendar'));    //test good
 app.use('/api', require('./routes/course'));      //test good
 app.use('/api', require('./routes/importExcel')); //test good
-app.use('/api', require('./routes/reservation')); 
+app.use('/api', require('./routes/reservation')); //test good
 
 
 app.listen(8000, () => {

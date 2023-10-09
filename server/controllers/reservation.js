@@ -1,160 +1,267 @@
 const db = require("../db");
 
+
+//----  หาวันเวลาว่าง
 exports.findAvailableTimeSlots = async (req, res) => {
   try {
-    const { course_id, lect_id, start_date, end_date } = req.body;
+    const { course_id, lect_id, start_date, end_date, roomtype_id, year,term } = req.body;
 
-    //----------------------------------------------lect----------------------------------------------------------
-    // สร้าง Object เพื่อเก็บข้อมูลวันว่างของอาจารย์
-    const lectScheduleObject = {
-      จันทร์: { AM: 0, PM: 0 },
-      อังคาร: { AM: 0, PM: 0 },
-      พุธ: { AM: 0, PM: 0 },
-      พฤหัสบดี: { AM: 0, PM: 0 },
-      ศุกร์: { AM: 0, PM: 0 },
-    };
-
-    // ดึงข้อมูลตารางสอนของอาจารย์จากฐานข้อมูล
-    const teachScheduleQuery =
-      "SELECT c.day, c.time FROM Teach t JOIN Course c ON t.course_id = c.course_id WHERE t.lect_id = ?";
-    const [teachRows, _teachFields] = await db
+//todo----------------------------------------------เรียกใช้ Stored Procedure----------------------------------------------------------
+ 
+ //0: ประกาศตัวเเปลใหม่เพราะชื่อไปทับกับtable ใน database ตอน query
+     const lect_id_db= lect_id;
+     const course_id_db= course_id;
+     const roomtype_id_db= roomtype_id;
+     const year_db= year;
+     const term_db= term;
+ //1: เรียกใช้ Stored Procedure และส่งพารามิเตอร์ lect_id_db, course_id_db, start_date, end_date
+    const [results, _fields] = await db
       .promise()
-      .query(teachScheduleQuery, [lect_id]);
+      .query("CALL getAllSchedule(?, ?, ?, ?, ?, ?, ?)", [
+        lect_id_db,
+        course_id_db,
+        start_date,
+        end_date,
+        roomtype_id_db,
+        year_db,
+        term_db
+      ]);
+       
+ //2: set data ข้อมูลที่ได้จาก database ลงตัวเเปร
+    const teachRows = results[0];              // ข้อมูลตารางสอนปกติของอาจารย์
+    const reservationRows = results[1];        // ข้อมูลการจองห้องของอาจารย์
+    const stdScheduleRows = results[2];        // ข้อมูลตารางเรียนของนักเรียนในคอร์สทุกคน
+    const reservationRowsStudent = results[3]; // ข้อมูลการจองห้องของนักเรียนในคอร์สทุกคน
+    const roomTypeRows=results[4];             // ข้อมูลห้องที่ตรงกับชนิดห้องที่ต้องการ roomtype_id
+    const normalScheduleRows = results[5];     // ข้อมูลตารางสอนปกติของห้องตาม roomtype_id
+    const reservationRowsRoom = results[6];       // ข้อมูลการจองห้องของห้องเรียนที่ตรงกับ roomtype_id
+    
+//todo----------------------------------------------A.Lectuler----------------------------------------------------------
 
-    // นำข้อมูลตารางสอนมาใส่ใน Object ของอาจารย์
+ //3: สร้าง Object lectScheduleObject โดยใช้วันที่เป็น key
+    const lectScheduleObject = {};
+    const currentDate = new Date(start_date);
+    const endDate = new Date(end_date);
+    while (currentDate <= endDate) {
+      const formattedDate = currentDate.toISOString().split("T")[0];
+      const dayName = getDayFromDate(formattedDate);
+      lectScheduleObject[formattedDate] = {
+        AM: 0,
+        PM: 0,
+      };
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+ //4: นำข้อมูลตารางสอนมาใส่ใน Object ของอาจารย์
     for (const row of teachRows) {
       const { day, time } = row;
-      if (time === "AM") {
-        lectScheduleObject[day].AM = 1;
-      } else if (time === "PM") {
-        lectScheduleObject[day].PM = 1;
+      if (time === "AM" || time === "PM") {
+        for (const date in lectScheduleObject) {
+          if (day === getDayFromDate(date)) {
+            lectScheduleObject[date][time] = 1;
+          }
+        }
       }
     }
 
-    const reservationQueryLecturer =
-      "SELECT reservation_date, reservation_time FROM Reservation WHERE user_id = ? AND reservation_date BETWEEN ? AND ?";
-    const [reservationRows, _reservationFields] = await db
-      .promise()
-      .query(reservationQueryLecturer, [lect_id, start_date, end_date]);
-
+ //5: นำข้อมูลการสอนเพิ่มเติมมาใส่ใน Object ของอาจารย์
     for (const row of reservationRows) {
       const { reservation_date, reservation_time } = row;
-      const day = getDayFromDate(reservation_date);
-      if (day && lectScheduleObject[day]) {
-        if (reservation_time === "AM") {
-          lectScheduleObject[day].AM = 1;
-        } else if (reservation_time === "PM") {
-          lectScheduleObject[day].PM = 1;
-        }
+      const formattedDate = new Date(reservation_date);
+      formattedDate.setDate(formattedDate.getDate() + 1); // ปัดวันขึ้นไป 1 วัน
+      const formattedDateISOString = formattedDate.toISOString().split("T")[0];
+      if (lectScheduleObject[formattedDateISOString]) {
+        lectScheduleObject[formattedDateISOString][reservation_time] = 1;
       }
     }
-    //----------------------------------------------student----------------------------------------------------------
 
-    // สร้าง Object เพื่อเก็บข้อมูลวันว่างของนักเรียน
-    const student_schedule = {
-      จันทร์: { AM: 0, PM: 0 },
-      อังคาร: { AM: 0, PM: 0 },
-      พุธ: { AM: 0, PM: 0 },
-      พฤหัสบดี: { AM: 0, PM: 0 },
-      ศุกร์: { AM: 0, PM: 0 },
-    };
+//todo----------------------------------------------B.Student----------------------------------------------------------
+    
+ //6: สร้าง Object stdScheduleObject โดยใช้วันที่เป็น key
+    const stdScheduleObject = {};
+    const currentDateStd = new Date(start_date);
+    while (currentDateStd <= endDate) {
+      const formattedDateStd = currentDateStd.toISOString().split("T")[0];
+      const dayNameStd = getDayFromDate(formattedDateStd);
+      stdScheduleObject[formattedDateStd] = {
+        AM: 0,
+        PM: 0,
+      };
+      currentDateStd.setDate(currentDateStd.getDate() + 1);
+    }
 
-    // ดึงข้อมูลนักเรียนที่ลงทะเบียนในคอร์สนี้
-    const regQuery = `
-      SELECT std_code
-      FROM std_reg_course
-      WHERE course_id = ?`;
-    const [regRows, _regFields] = await db
-      .promise()
-      .execute(regQuery, [course_id]);
-
-    // วนลูปเพื่อหาข้อมูลวันว่างของนักเรียน
-    for (const regRow of regRows) {
-      const stdQuery = `
-        SELECT c.day, c.time
-        FROM course c
-        WHERE c.course_id IN (SELECT course_id FROM std_reg_course WHERE std_code = ?)`;
-      const [stdRows, _stdFields] = await db
-        .promise()
-        .execute(stdQuery, [regRow.std_code]);
-
-      // นำข้อมูลวันว่างของนักเรียนมาใส่ใน Object
-      for (const stdRow of stdRows) {
-        const { day, time } = stdRow;
-        if (time === "AM") {
-          student_schedule[day].AM = 1;
-        } else if (time === "PM") {
-          student_schedule[day].PM = 1;
+ //7: นำข้อมูลวันว่างของนักเรียนมาใส่ใน Object ของนักเรียน
+    for (const row of stdScheduleRows) {
+      const { day, time } = row;
+      if (time === "AM" || time === "PM") {
+        for (const date in stdScheduleObject) {
+          if (day === getDayFromDate(date)) {
+            stdScheduleObject[date][time] = 1;
+          }
         }
       }
     }
 
-   //ค้นหาทุกคอร์สที่นักศึกษาในคอร์สตัวนี้ลงทะเบียนเรียนเพิ่มเติมในตาราง Reservation
-    const reservationQueryStudent = `
-  SELECT reservation_date, reservation_time
-  FROM Reservation r
-  JOIN std_reg_course sr ON r.course_id = sr.course_id
-  WHERE sr.std_code IN (
-    SELECT std_code
-    FROM std_reg_course
-    WHERE course_id = ?
-  ) AND reservation_date BETWEEN ? AND ?`;
-    const [reservationRowsStudent, _reservationFieldsStudent] = await db
-      .promise()
-      .execute(reservationQueryStudent, [course_id, start_date, end_date]);
-
-    // นำข้อมูลการจองมาใส่ใน Object ของนักเรียน
+ //8: นำข้อมูลการจองมาเพิ่มใน Object ของนักเรียน
     for (const row of reservationRowsStudent) {
       const { reservation_date, reservation_time } = row;
-      const day = getDayFromDate(reservation_date);
-      if (day && student_schedule[day]) {
-        if (reservation_time === "AM") {
-          student_schedule[day].AM = 1;
-        } else if (reservation_time === "PM") {
-          student_schedule[day].PM = 1;
-        }
+      const formattedDate = new Date(reservation_date);
+      formattedDate.setDate(formattedDate.getDate() + 1); // ปัดวันขึ้นไป 1 วัน
+      const formattedDateISOString = formattedDate.toISOString().split("T")[0];
+      if (stdScheduleObject[formattedDateISOString]) {
+        stdScheduleObject[formattedDateISOString][reservation_time] = 1;
       }
     }
 
-    //รวม Object student_schedule และ lectScheduleObject เข้าด้วยกัน
-    const combinedSchedule = {
-      จันทร์: {
-        AM: student_schedule["จันทร์"].AM || lectScheduleObject["จันทร์"].AM,
-        PM: student_schedule["จันทร์"].PM || lectScheduleObject["จันทร์"].PM,
-      },
-      อังคาร: {
-        AM: student_schedule["อังคาร"].AM || lectScheduleObject["อังคาร"].AM,
-        PM: student_schedule["อังคาร"].PM || lectScheduleObject["อังคาร"].PM,
-      },
-      พุธ: {
-        AM: student_schedule["พุธ"].AM || lectScheduleObject["พุธ"].AM,
-        PM: student_schedule["พุธ"].PM || lectScheduleObject["พุธ"].PM,
-      },
-      พฤหัสบดี: {
-        AM: student_schedule["พฤหัสบดี"].AM || lectScheduleObject["พฤหัสบดี"].AM,
-        PM: student_schedule["พฤหัสบดี"].PM || lectScheduleObject["พฤหัสบดี"].PM,
-      },
-      ศุกร์: {
-        AM: student_schedule["ศุกร์"].AM || lectScheduleObject["ศุกร์"].AM,
-        PM: student_schedule["ศุกร์"].PM || lectScheduleObject["ศุกร์"].PM,
-      },
+ //todo----------------------------------------------C.  คือนำ A.Lectuler + B.Student === C.resultA+B. ----------------------------------------------------------
+
+ //9: รวม Object lectScheduleObject และ stdScheduleObject เข้าด้วยกัน
+    const combinedSchedule = {};
+    for (const date in lectScheduleObject) {
+      combinedSchedule[date] = {
+        AM: stdScheduleObject[date].AM || lectScheduleObject[date].AM,
+        PM: stdScheduleObject[date].PM || lectScheduleObject[date].PM,
+      };
+    } 
+//todo------------------------------------------------D.Room---------------------------------------------------------------------------
+    
+ //10: สร้าง Object เพื่อเก็บข้อมูลวันว่างของห้องตาม roomtype_id
+   const roomSchedules = {};
+   for (const row of roomTypeRows) {
+     const { room_id } = row;
+     roomSchedules[room_id] = {}; // สร้าง Object ว่างเพื่อเก็บข้อมูลของห้อง
+     const currentDate = new Date(start_date);
+     while (currentDate <= endDate) {
+       const formattedDate = currentDate.toISOString().split("T")[0];
+       roomSchedules[room_id][formattedDate] = {
+         AM: 0,
+         PM: 0,
+       };
+       currentDate.setDate(currentDate.getDate() + 1);
+     }
+   }
+  
+ //11: นำข้อมูลตารางสอนปกติมาใส่ใน Object ของห้อง
+ for (const row of normalScheduleRows) {
+  const { room_id, day, time } = row;
+  if (time === "AM" || time === "PM") {
+    for (const date in roomSchedules[room_id]) {
+      if (day === getDayFromDate(date)) {
+        roomSchedules[room_id][date][time] = 1;
+      }
+    }
+  }
+}
+
+  // เพิ่มโค้ดนี้เพื่อดึง roomIds ออกมา ทำในข้อ13
+  const roomIds = Object.keys(roomSchedules);
+
+//12: นำข้อมูลการจองของห้องที่ตรงกับ roomtype_id มาใส่ใน Object
+for (const row of reservationRowsRoom) {
+  const { room_id, reservation_date, reservation_time } = row;
+  const formattedDate = new Date(reservation_date);
+  formattedDate.setDate(formattedDate.getDate() + 1); // ปัดวันขึ้นไป 1 วัน
+  const formattedDateISOString = formattedDate.toISOString().split("T")[0];
+  if (
+    roomSchedules[room_id] &&
+    roomSchedules[room_id][formattedDateISOString]
+  ) {
+    roomSchedules[room_id][formattedDateISOString][reservation_time] = 1;
+  }
+}
+
+//todo------------------------------------------------E.  คือนำ D.Room +C.resultA+B ====E.ผลลัพ ---------------------------------------------------------------------------
+
+// ข้อ 13: รวม Object combinedSchedule และ Object roomSchedules ของทุกห้อง
+const combinedRoomSchedules = {};
+for (const room_id of roomIds) {
+  combinedRoomSchedules[room_id] = {};
+  for (const date in combinedSchedule) {
+    combinedRoomSchedules[room_id][date] = {
+      AM: combinedSchedule[date].AM || roomSchedules[room_id][date].AM,
+      PM: combinedSchedule[date].PM || roomSchedules[room_id][date].PM,
     };
+  }
+}
 
 
 
-    // ส่ง JSON กับข้อมูลว่างเวลาของอาจารย์และนักเรียนในคอร์สนี้ทุกคนกลับไปที่เว็บไซต์
+//todo------------------------------------------------F. เเปลงข้อมูลตัดข้อมูลที่ไม่ใช้ออกก่อนส่งไปหน้าบ้าน ---------------------------------------------------------------------------
+
+//ข้อ 14
+const transformScheduleData = (scheduleData) => {
+  const transformedData = {};
+
+  for (const room_id in scheduleData) {
+    transformedData[room_id] = {};
+
+    for (const date in scheduleData[room_id]) {
+      const timeData = scheduleData[room_id][date];
+
+      // ตรวจสอบว่าช่วงเช้าและช่วงบ่ายไม่ว่างทั้งคู่หรือไม่
+      if (timeData["AM"] !== 1 || timeData["PM"] !== 1) {
+        // ถ้าไม่ว่างทั้งคู่ให้เพิ่มข้อมูลลงใน transformedData
+        transformedData[room_id][date] = {};
+
+        // แปลง "AM": 0 เป็นช่วงเช้า
+        if (timeData["AM"] === 0) {
+          transformedData[room_id][date]["ช่วงเช้า"] = 0;
+        }
+
+        // แปลง "PM": 0 เป็นช่วงบ่าย
+        if (timeData["PM"] === 0) {
+          transformedData[room_id][date]["ช่วงบ่าย"] = 0;
+        }
+      }
+    }
+  }
+
+  return transformedData;
+};
+//เลียกใช้function ตัดข้อมูล
+const transformedData = transformScheduleData(combinedRoomSchedules);
+
+
+//ข้อ15   จัดเรียง array เพื่อให้หน้าบ้าน map loop ได้ง่ายขึ้น 
+function transformDataToallResult(transformedData) {
+  const allResult = [];
+  for (const room_id in transformedData) {
+    for (const date in transformedData[room_id]) {
+      for (const time in transformedData[room_id][date]) {
+        if (transformedData[room_id][date][time] === 0) {
+          allResult.push({
+            room_id: parseInt(room_id),
+            date,
+            time,
+          });
+        }
+      }
+    }
+  }
+
+  return allResult;
+}
+// เรียกใช้ฟังก์ชันเพื่อแปลงข้อมูล
+const allResult = transformDataToallResult(transformedData);
+//console.log(allResult);
+
+
+
+    // ส่งข้อมูลผลลัพธ์กลับ 
     res.json({
-      lecturer_schedule: lectScheduleObject,
-      student_schedule: student_schedule,
-      combinedSchedule:combinedSchedule
+      //lectScheduleObject: lectScheduleObject,       //A.Lectuler
+      //stdScheduleObject: stdScheduleObject,         //B.Student
+      //combinedSchedule: combinedSchedule,           //C.resultA+B
+      //roomSchedules: roomSchedules,                 //D.Room
+      //combinedRoomSchedules:combinedRoomSchedules,  //E.ผลลัพ
+      //transformedData:transformedData               //F.ตัดข้อมูลผลลัพที่ไม่ได้ใช้
+      allResult:allResult                             //ส่งผลลัพจัดเรียงไปหน้าบ้าน
     });
   } catch (error) {
     console.error("Error:", error);
-    res
-      .status(500)
-      .json({
-        error: "An error occurred while fetching the available time slots.",
-      });
+    res.status(500).json({
+      error: "An error occurred while fetching the available time slots.",
+    });
   }
 };
 
@@ -172,3 +279,140 @@ function getDayFromDate(date) {
   const dayIndex = jsDate.getDay(); // 0 = อาทิตย์, 1 = จันทร์, ...
   return dayNames[dayIndex];
 }
+
+
+
+
+
+
+
+
+
+
+
+//-----------  จองห้อง ----------------------- 
+exports.createReservation = async (req, res) => {
+  const { reservation_id, lect_id, course_id, room_id, status_code, Tran_dt, start_date, end_date, reservation_date, reservation_time } = req.body;
+
+  // เพิ่มข้อมูลใน Reservation
+  const reservationSql = "INSERT INTO Reservation (reservation_id, user_id, course_id, room_id, status_code, Tran_dt, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  db.query(reservationSql, [reservation_id, lect_id, course_id, room_id, status_code, Tran_dt, start_date, end_date], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    // เพิ่มข้อมูลใน Reservation_detail
+    const reservationDetailSql = "INSERT INTO Reservation_detail (reservation_id, reservation_date, reservation_time) VALUES (?, ?, ?)";
+    db.query(reservationDetailSql, [reservation_id, reservation_date, reservation_time], (error, results) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+      res.status(200).json({ message: "Reservation has been created successfully." });
+    });
+  });
+};
+
+
+
+
+
+//--------------------  อ่านประวัติการจองจากวันที่ ---------------- 
+exports.readReservationByDate = async (req, res) => {
+  const { reservation_date_db } = req.body; // เปลี่ยนเป็นตัวแปรที่คุณใช้ในการรับวันที่จาก req.body
+  const sql = `
+    SELECT r.*, rd.reservation_date, rd.reservation_time
+    FROM Reservation r
+    JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+    WHERE rd.reservation_date = ?
+  `;
+  db.query(sql, [reservation_date_db], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json( results);
+  });
+};
+
+
+//---------------อ่านประวัติการจองทั้งหมด ---------------- 
+exports.readAllReservation = async (req, res) => {
+  const sql = `
+  SELECT r.*, rd.reservation_date, rd.reservation_time, c.subj_code, s.subj_name
+  FROM Reservation r 
+  JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+  JOIN Course c ON r.course_id = c.course_id
+  JOIN Subject s ON c.subj_code = s.subj_code
+  `;
+  db.query(sql, (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json(results);
+  });
+};
+
+
+
+//--------------------อ่านประวัติการจองจาก user_id ---------------- 
+exports.readReservationById = async (req, res) => {
+  const { id } = req.params; 
+  const sql = `
+      SELECT r.reservation_id,r.room_id, rd.reservation_date, rd.reservation_time, c.subj_code, s.subj_name
+      FROM Reservation r
+      JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+      JOIN Course c ON r.course_id = c.course_id
+      JOIN Subject s ON c.subj_code = s.subj_code
+        WHERE r.user_id = ?
+  `;
+  db.query(sql, [id], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json(results);
+  });
+};
+
+
+//--------------------อ่านประวัติการจองจาก room_id ---------------- 
+exports.readReservationByRoomId = async (req, res) => {
+  const { id } = req.params;  // เปลี่ยนชื่อตัวแปรเป็น room_id
+  const sql = `
+  SELECT r.reservation_id, r.user_id, r.room_id, rd.reservation_date, rd.reservation_time, u.user_name
+  FROM Reservation r
+  JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+  JOIN Users u ON r.user_id = u.user_id
+  WHERE r.room_id = ?;  
+  `;
+  db.query(sql, [id], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json(results);
+  });
+};
+
+
+
+
+//---------------     ลบการจอง ---------------- 
+exports.deleteReservation = async (req, res) => {
+  const { id } = req.params;
+    // ลบข้อมูลจากตาราง Reservation_detail 
+    const deleteDetailSql = "DELETE FROM Reservation_detail WHERE reservation_id = ?";
+    db.query(deleteDetailSql, [id], (error, detailResult) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+      res.status(200).json({ message: "Reservation has been deleted successfully." });
+      // ลบข้อมูลจากตาราง Reservation 
+     const deleteReservationSql = "DELETE FROM Reservation WHERE reservation_id = ?";
+     db.query(deleteReservationSql, [id], (error, reservationResult) => {
+       if (error) {
+       return res.status(500).json({ error });
+      }
+    }); 
+  });
+};
+
+
+
+

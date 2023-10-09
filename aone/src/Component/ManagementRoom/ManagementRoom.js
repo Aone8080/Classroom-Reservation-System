@@ -126,7 +126,7 @@ const handleSubmit = async (e) => {
           </thead>
           <tbody>
             {data.map((item,index)=>(
-            <tr>
+            <tr key={index}>
               <th className="text-center" scope="row">
                 {item.building}
               </th>

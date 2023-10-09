@@ -11,6 +11,7 @@ const {
   createRoomType,
   readAllRoomType,
   readRoomType,
+  readAllRoomByRoomType_id,
   updateRoomType,
   deleteRoomType,
   } = require("../controllers/room");
@@ -19,9 +20,11 @@ const {
   const { authCheck,adminCheck } = require("../middleware/auth");
   
  //room
-  router.post("/room", authCheck,adminCheck,createRoom)
+  //router.post("/room", authCheck,adminCheck,createRoom)
+  router.post("/room",createRoom)
   router.get("/room", readAllRoom)
   router.get("/room/:id", readRoom)
+  router.get("/roombyroomtype/:id", readAllRoomByRoomType_id)
   router.put("/room/:id",authCheck,adminCheck, updateRoom)
   router.delete("/room/:id",authCheck,adminCheck, deleteRoom)
   
