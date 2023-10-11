@@ -18,7 +18,7 @@ import ImportCourse from "./Page/ImportCourse/ImportCourse";
 import ImportStudent from "./Page/ImportStudent/ImportStudent";
 import DataManagement from "./Page/DataManagement/DataManagement";
 import BookingApproval from "./Page/BookingApproval/BookingApproval";
-import SinglePageBookingApproval from "./Page/SinglePageBookingApproval/SinglePageBookingApproval";
+
 //Protect Routes
 import UserRoute from "./Protect_Rout/UserRoute"; 
 import AdminRoute from "./Protect_Rout/AdminRoute";
@@ -67,7 +67,7 @@ function App() {
         <Route path="/importstudent"    element={<AdminRoute>   <ImportStudent/>   </AdminRoute>}/>
         <Route path="/data-management"  element={<AdminRoute>   <DataManagement/>  </AdminRoute>}/>
         <Route path="/booking-approval" element={<AdminRoute>   <BookingApproval/> </AdminRoute>}/>
-        <Route path="/booking-approval/:id" element={<AdminRoute><SinglePageBookingApproval /></AdminRoute>}/>
+       
     </Routes>
     </>
   );

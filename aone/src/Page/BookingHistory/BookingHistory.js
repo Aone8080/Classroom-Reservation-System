@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { readreservationByid,deleteReservation } from "../../functions/reservation";
+import moment from 'moment/min/moment-with-locales';
 
 const BookingHistory = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -67,8 +68,8 @@ const BookingHistory = () => {
                 <td className="text-center">{item.room_id}</td>
                 <td className="text-center">{item.subj_name}</td>
                 <td className="text-center">{item.subj_code}</td>
-                <td className="text-center">{item.reservation_date}</td>
-                <td className="text-center">{item.reservation_time}</td>
+                <td className="text-center">{moment(item.reservation_date).locale('th').format('LL')}</td>
+                <td className="text-center">{item.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"}</td>
                 <td className="text-center">
                   <button
                     className="btn-trash me-3"

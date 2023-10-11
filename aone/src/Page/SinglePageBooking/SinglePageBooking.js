@@ -2,6 +2,7 @@ import React, { useState,useEffect } from "react";
 import "./SinglePageBooking.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import moment from 'moment/min/moment-with-locales';
 // Function
 import { findDayTime, reservation} from "../../functions/reservation";
 
@@ -162,8 +163,8 @@ const SinglePageBooking = () => {
   <div className="schedule-container mb-5">
     <h3 className="title text-center mt-5 mb-3">3. ตารางสอนที่สามารถจองได้</h3>
     <h3 className="dec text-center mt-5 mb-2">
-      ช่วงเวลาตั้งแต่วันที่ <span className="editspan">{start_date}</span> ถึง{" "}
-      <span className="editspan">{end_date}</span> มีห้องว่างดังนี้
+      ช่วงเวลาตั้งแต่วันที่ <span className="editspan">{moment(start_date).locale('th').format('LL')}</span> ถึง{" "}
+      <span className="editspan">{moment(end_date).locale('th').format('LL')} </span> มีห้องว่างดังนี้
     </h3>
     <table className="table table-bordered shadow custom-table">
       <thead>
@@ -186,7 +187,7 @@ const SinglePageBooking = () => {
   {data.allResult.map((item, index) => (
     <tr key={index}>
       <td className="text-center">{item.room_id}</td>
-      <td className="text-center">{item.date}</td>
+      <td className="text-center">{moment(item.date).locale('th').format('LL')}</td>
       <td className="text-center">{item.time}</td>
       <td className="text-center">
         <button
