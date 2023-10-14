@@ -14,16 +14,17 @@ exports.createRoom = async (req, res) => {
 };
 
 
-//----readAllRoom
+//---Read All Rooms with Room Type
 exports.readAllRoom = async (req, res) => {
-  const sql = "SELECT * FROM room";
-  db.query(sql, (error, results) => {
-      if (error) {
-          return res.status(500).json({ error });
-      }
-      res.status(200).json(results);
-  });
+    const sql = "SELECT room.*, roomtype.roomtype_name FROM room JOIN roomtype ON room.roomtype_id = roomtype.roomtype_id";
+    db.query(sql, (error, results) => {
+        if (error) {
+            return res.status(500).json({ error });
+        }
+        res.status(200).json(results);
+    });
 };
+
 
 
 //----readRoom

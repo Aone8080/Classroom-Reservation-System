@@ -11,7 +11,9 @@ app.use(cors());
 
 // Route 
 app.use('/api', require('./routes/auth')); 
+app.use('/api', require('./routes/user')); 
 app.use('/api', require('./routes/room'));        //test good
+app.use('/api', require('./routes/major'));        //test good
 app.use('/api', require('./routes/lecturer'));    //test good
 app.use('/api', require('./routes/subject'));     //test good
 app.use('/api', require('./routes/student'));     //test good

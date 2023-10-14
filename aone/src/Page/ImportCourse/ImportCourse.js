@@ -36,9 +36,6 @@ const ImportCourse = () => {
   const [lect_name, setLect_name] = useState("");
   const [std_code, setStdCode] = useState([]);
   const [std_name, setStdName] = useState([]); 
-
-
-  
   const [building, setBuilding] = useState("");
 
    //set courseID = (Year + Term + subj_code)

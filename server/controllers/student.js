@@ -12,7 +12,7 @@ exports.createStudent = async (req, res) => {
 };
 
 exports.readAllStudent = async (req, res) => {
-    const sql = "SELECT std_code, major_id, std_name FROM student";
+    const sql = "SELECT s.std_code, s.major_id, s.std_name, m.major_name FROM student s LEFT JOIN major m ON s.major_id = m.major_id";
     db.query(sql, (error, results) => {
         if (error) {
             return res.status(500).json({ error });
@@ -20,6 +20,9 @@ exports.readAllStudent = async (req, res) => {
         res.status(200).json(results);
     });
 };
+
+
+
 
 exports.readStudent = async (req, res) => {
     const { id } = req.params;

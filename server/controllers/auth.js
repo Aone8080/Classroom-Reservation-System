@@ -4,11 +4,11 @@ const db = require("../db");
 
 //----register
 exports.register = async (req, res) => {
-  const { username,  password, user_name, role = "user" } = req.body;
+  const { user_id,  password, user_name, role = "user" } = req.body;
 
   db.query(
     "SELECT * FROM users WHERE user_id = ?",
-    [username],
+    [user_id],
     async (error, results) => {
       if (error) {
         return res.status(500).json({ error });
@@ -22,7 +22,7 @@ exports.register = async (req, res) => {
 
         db.query(
           "INSERT INTO Users SET ?",
-          { user_id: username,  password: hashedPassword, user_name, role: role },
+          { user_id: user_id,  password: hashedPassword, user_name, role: role },
           (error, results) => {
             if (error) {
               return res.status(500).json({ error });

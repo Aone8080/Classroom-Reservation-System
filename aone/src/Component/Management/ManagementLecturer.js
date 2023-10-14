@@ -3,14 +3,13 @@ import { useSelector } from "react-redux";
 import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
-import {createRoom,readAllRooms,updateRoom,deleteRoom}from "../../functions/room"
+import {createLecturer,readAllLecturer,updateLecturer,deleteLecturer}from "../../functions/lecturer"
 
-const ManagementRoom = () => {
+const ManagementLecturer = () => {
   const { user } = useSelector((state) => ({ ...state }));
-  const [room_id, setRoom_id] = useState("");
-  const [roomtype_id, setRoomtype_id] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [building, setBuilding] = useState("");
+  const [lect_id, setLect_id] = useState("");
+  const [lect_name, setLect_name] = useState("");
+  
   
 //------------------------------------------cerate room--------------------------------------------
 //createModal
@@ -21,26 +20,24 @@ const handleModalShow = () => setShowModal(true);
 const handleSubmit = async (e) => {
   e.preventDefault();
   const newPost = {
-    room_id,
-    roomtype_id,
-    capacity,
-    building,
+    lect_id,
+    lect_name,
   };
-  createRoom(user.token, newPost)
+  createLecturer(user.token, newPost)
     .then((res) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Room Success"); 
+      alert("create Lecturer Success"); 
     })
     .catch((err) => {
       console.log(err.response.data);
     });
 };
-//------------------------------------------readAllRoom and loadData---------------------------------
+//------------------------------------------readAllLecturer and loadData---------------------------------
  const [data, setData] = useState([]);         
  const loadData = (authtoken) => { 
-  readAllRooms(authtoken)
+  readAllLecturer(authtoken)
      .then((res) => {
        setData(res.data);   
      })
@@ -55,17 +52,13 @@ const handleSubmit = async (e) => {
   //editModal 
   const [editModal, setEditModal] = useState(false);
   const [values, setValues] = useState({
-    room_id: "",
-    roomtype_id: "",
-    capacity: "",
-    building: "",
+    lect_id: "",
+    lect_name: ""
   });
   const showEditModal = (room) => {
     setValues({
-      room_id: room.room_id,
-      roomtype_id: room.roomtype_id,
-      capacity: room.capacity,
-      building: room.building,
+      lect_id: room.lect_id,
+      lect_name: room.lect_name
     });
     setEditModal(true);
   };
@@ -74,18 +67,18 @@ const handleSubmit = async (e) => {
   };
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    updateRoom(user.token, values.room_id, values)
+    updateLecturer(user.token, values.lect_id, values)
       .then((res) => {
-        alert("Update Room Success");
+        alert("Update Lecturer Success");
         loadData(user.token);
         setEditModal(false);
       })
       .catch((err) => console.log(err.response.data));
   };
-//------------------------------------------deleteRoom---------------------------------------------
+//------------------------------------------deleteLecturer---------------------------------------------
   const handleRemove = (id) => {
     if (window.confirm("Are You Sure Delete!!")) { 
-      deleteRoom(user.token, id)                   
+      deleteLecturer(user.token, id)                   
         .then((res) => {                           
           console.log(res);
           loadData(user.token);               
@@ -99,7 +92,7 @@ const handleSubmit = async (e) => {
   return (
     <div className="con">
       <div className="d-flex justify-content-start align-items-center">
-        <h3 className="title">ข้อมูลห้องเรียน</h3>
+        <h3 className="title">ข้อมูลอาจารย์</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
           <FaPlus /> เพิ่มข้อมูล
         </button>
@@ -110,16 +103,10 @@ const handleSubmit = async (e) => {
           <thead>
             <tr>
               <th className="text-center" scope="col">
-                <h3 className="titleTh">อาคาร</h3>
+                <h3 className="titleTh">รหัสประจำตัว</h3>
               </th>
               <th className="text-center" scope="col">
-                <h3 className="titleTh">ห้อง</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ความจุ</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชนิดห้อง</h3>
+                <h3 className="titleTh">ชื่อ-นามสกุลอาจารย์</h3>
               </th>
               <th scope="col"></th>
             </tr>
@@ -127,17 +114,13 @@ const handleSubmit = async (e) => {
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <th className="text-center" scope="row">
-                {item.building}
-              </th>
-              <td className="text-center">{item.room_id}</td>
-              <td className="text-center">{item.capacity}</td>
-              <td className="text-center">{item.roomtype_id}</td>
+              <td className="text-center">{item.lect_id}</td>
+              <td className="text-center">{item.lect_name}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.room_id)} >
+                <button className="btn-trash" onClick={() => handleRemove(item.lect_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>
@@ -147,53 +130,35 @@ const handleSubmit = async (e) => {
         </table>
       </div>
 
+
+      {/* MODAL เพิ่มข้อมูล */}
       <Modal show={showModal} onHide={handleModalClose} className="custom-modal">
         <Modal.Header closeButton>
           <Modal.Title className="text-center w-100">
-            <h3 className="titleModal">เพิ่มข้อมูลห้องเรียน</h3>
+            <h3 className="titleModal">เพิ่มข้อมูลอาจารย์</h3>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div class="container ">
             <form className="m-5">
-              <div className="form-group ">
-                <h3>อาคาร</h3>
+              <div className="form-group mt-3">
+                <h3>รหัสประจำตัว</h3>
                 <input
                   className="form-control"
                   type="text"
-                  name="building"
-                  onChange={(e) => setBuilding(e.target.value)}
+                  name="lect_id"
+                  onChange={(e) => setLect_id(e.target.value)}
                 />
               </div>
 
               <div className="form-group mt-3">
-                <h3>ห้อง</h3>
+                <h3>ชื่อ-นามสกุลอาจารย์</h3>
                 <input
                   className="form-control"
                   type="text"
-                  name="room_id"
-                  onChange={(e) => setRoom_id(e.target.value)}
+                  name="lect_name"
+                  onChange={(e) => setLect_name(e.target.value)}
                 />
-              </div>
-
-              <div className="form-group mt-3">
-                <h3>ความจุ</h3>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="capacity"
-                  onChange={(e) => setCapacity(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group mt-3">
-                <h3>ชนิดห้อง</h3>
-                <select className="form-control" onChange={(e) => setRoomtype_id(e.target.value)}>
-                  <option value="">เลือก...</option>
-                  <option value="1">ห้องเรียน</option>
-                  <option value="2">ห้องประชุม</option>
-                  <option value="3">ห้องหุ่นยน</option>
-                </select>
               </div>
             </form>
           </div>
@@ -207,48 +172,36 @@ const handleSubmit = async (e) => {
       </Modal>
 
 
-      <Modal show={editModal} onHide={() => setEditModal(false)} className="custom-modal">
+
+  {/* MODAL เเก้ไขข้อมูล */}
+  <Modal show={editModal} onHide={() => setEditModal(false)} className="custom-modal">
   <Modal.Header closeButton>
     <Modal.Title className="text-center w-100">
-      <h3 className="titleModal">แก้ไขข้อมูลห้อง {values.room_id}</h3>
+      <h3 className="titleModal">แก้ไขข้อมูลอาจารย์ </h3>
     </Modal.Title>
   </Modal.Header>
   <Modal.Body>
     <div className="container">
       <form className="m-5" onSubmit={handleEditSubmit}>
         <div className="form-group">
-          <h3>อาคาร</h3>
+          <h3>รหัสประจำตัว</h3>
           <input
             className="form-control"
             type="text"
-            name="building"
-            value={values.building}
+            name="lect_id"
+            value={values.lect_id}
             onChange={handleEdit}
           />
         </div>
         <div className="form-group mt-3">
-          <h3>ความจุ</h3>
+          <h3>ชื่อ-นามสกุลอาจารย์</h3>
           <input
             className="form-control"
             type="text"
-            name="capacity"
-            value={values.capacity}
+            name="lect_name"
+            value={values.lect_name}
             onChange={handleEdit}
           />
-        </div>
-        <div className="form-group mt-3">
-          <h3>ชนิดห้อง</h3>
-          <select
-            className="form-control"
-            name="roomtype_id"
-            value={values.roomtype_id}
-            onChange={handleEdit}
-          >
-            <option value="">เลือก...</option>
-            <option value="1">ห้องเรียน</option>
-            <option value="2">ห้องประชุม</option>
-            <option value="3">ห้องหุ่นยน</option>
-          </select>
         </div>
       </form>
     </div>
@@ -268,4 +221,4 @@ const handleSubmit = async (e) => {
   );
 };
 
-export default ManagementRoom;
+export default ManagementLecturer;

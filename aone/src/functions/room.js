@@ -28,9 +28,6 @@ export const readRoom = async (authtoken,id) => {
   });
 };
 
-//----readAllRoomType 
-  export const readAllRoomsType = async () =>
-  await axios.get(process.env.REACT_APP_API + "/roomtype");
 
 
 //----readAllroomByRoomtype_id
@@ -59,3 +56,50 @@ export const deleteRoom = async (authtoken, id) => { //get Token and id
       },
     });
   };
+
+//------------------------------------  ROOM type--------------------------------------------------------------
+
+
+export const createRoomType = async (authtoken, value) => { 
+  return await axios.post(process.env.REACT_APP_API + "/roomtype", value, {
+    headers: {
+      authtoken,
+    },
+  });
+};
+
+
+export const readRoomType = async (authtoken,id) => {
+return await axios.get(`${process.env.REACT_APP_API}/roomtype/${id}`,{
+  headers: {
+      authtoken, 
+    },
+});
+};
+
+
+export const readAllRoomsType = async () =>
+await axios.get(process.env.REACT_APP_API + "/roomtype");
+
+
+
+export const updateRoomType= async (authtoken, id, values) => {
+  return await axios.put(`${process.env.REACT_APP_API}/roomtype/${id}`,values, {
+    headers: {
+      authtoken
+    }
+  });
+};
+
+
+export const deleteRoomType = async (authtoken, id) => { //get Token and id
+  return await axios.delete(`${process.env.REACT_APP_API}/roomtype/${id}`, {
+    headers: {
+      authtoken,
+    },
+  });
+};
+
+
+
+

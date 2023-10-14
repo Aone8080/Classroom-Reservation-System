@@ -1,16 +1,17 @@
 const db = require('../db');
 
-
 //----readAllCourse
-exports.readAllCourse= async (req, res) =>{
-  const sql = 'SELECT * FROM course';
-  db.query(sql,(error, results)=>{
-    if(error){
+exports.readAllCourse = async (req, res) => {
+  const sql = 'SELECT course.*, Subject.subj_name, Lecturer.lect_name FROM course LEFT JOIN Subject ON course.subj_code = Subject.subj_code LEFT JOIN Teach ON course.course_id = Teach.course_id LEFT JOIN Lecturer ON Teach.lect_id = Lecturer.lect_id';
+  db.query(sql, (error, results) => {
+    if (error) {
       return res.status(500).json({ error });
     }
     res.status(200).json(results);
   });
 };
+
+
 
 //----readCourse
 exports.readCourse = async (req, res) => {

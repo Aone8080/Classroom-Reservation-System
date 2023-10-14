@@ -13,7 +13,7 @@ const {
 router.post("/calendar", createCalendar);
 router.get("/calendar", readAllCalendars);
 router.get("/calendar/:Years/:Term", readCalendar);
-router.put("/calendar/:Years/:Term", updateCalendar);
+router.put("/calendar", updateCalendar);
 router.delete("/calendar/:Years/:Term", deleteCalendar);
 
 module.exports = router;
