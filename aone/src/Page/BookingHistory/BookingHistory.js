@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { readreservationByid,deleteReservation } from "../../functions/reservation";
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/th';
 
 const BookingHistory = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -14,6 +15,7 @@ const BookingHistory = () => {
       readreservationByid(user.token, ID)
         .then((res) => {
           setData(res.data); 
+          
         })
         .catch((error) => {
           console.log(error);

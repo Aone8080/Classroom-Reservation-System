@@ -22,6 +22,7 @@ export const createCourse= async (authtoken, value) => {
 };
 
 
+
 //----readAllCourse    
 export const readAllCourse= async (authtoken) => {
   return await axios.get(process.env.REACT_APP_API + "/course", {

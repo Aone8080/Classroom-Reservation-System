@@ -4,6 +4,9 @@ import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
 import {createSubject,readAllSubject,updateSubject,deleteSubject}from "../../functions/subject"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
 
 const ManagementSubject = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -28,7 +31,8 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Subject Success"); 
+      //alert("create Subject Success");
+      message.success('create Subject Success'); 
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -69,7 +73,8 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateSubject(user.token, values.subj_code, values)
       .then((res) => {
-        alert("Update Subject Success");
+        //alert("Update Subject Success");
+        message.success('Update Subject Success'); 
         loadData(user.token);
         setEditModal(false);
       })
@@ -81,7 +86,8 @@ const handleSubmit = async (e) => {
       deleteSubject(user.token, id)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Subject Success');               
         })
         .catch((err) => {
           console.log(err.response);
@@ -90,7 +96,8 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลวิชา</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -98,7 +105,7 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>

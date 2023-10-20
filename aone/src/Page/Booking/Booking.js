@@ -2,29 +2,44 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 // Function
+import {  readYearsTermFromday } from "../../functions/years_term";
 import { readCoursesByLecturer } from "../../functions/course";
 
 const Booking = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
+  //เอา yyyy-MM-dd ปัจจุบัน
+  const today = new Date();
+  const todayFormatted = today.toISOString().split('T')[0]; // แปลงให้อยู่ในรูปแบบ "yyyy-MM-dd"
+  const [Today, setToday] = useState(todayFormatted);
+  
   const [years, setYears] = useState("");
-  const [term, setTerm] = useState("1");
+  const [term, setTerm] = useState("");
   const [data, setData] = useState([]);
   
-  // สร้างฟังก์ชันเพื่อแปลงปีคริสต์ศักราชเป็นปีพุทธศักราช
-  useEffect(() => {
-    const getBuddhistYear = () => {
-      const christianYear = new Date().getFullYear();
-      const buddhistYear = christianYear + 543;
-      return buddhistYear.toString();      // แปลงเป็นข้อความ (string) สำหรับแสดงผล
-    };
-    const buddhistYear = getBuddhistYear(); // เรียกใช้งานและเซ็ตปีพุทธศักราชใน state
-    setYears(buddhistYear);
-  }, []);
+    
 
-//---featch ข้อมูล วิชาที่อาจารย์มีสอน
+
+// 1---featch ข้อมูลหาว่าเวลาตอนนี้ตรงกับเทอมไหน
+useEffect(() => {
+  if (user && user.token) {
+    readYearsTermFromday(user.token,Today)
+      .then((res) => {
+        if (res.data.length > 0) {
+          const { Years, Term } = res.data[0]; // นำข้อมูลจาก res.data
+          setYears(Years.toString()); // แปลงเป็นข้อความ (string) และกำหนดให้ years
+          setTerm(Term.toString()); 
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+}, [user,Today]);
+
+//2 ---featch ข้อมูล วิชาที่อาจารย์มีสอนในเทอมนี้
   useEffect(() => {
-    if (user && user.token) {             
+    if (user && user.token && years && term) {             
       const value = {
         lect_id: user.username,
         years,
@@ -33,13 +48,14 @@ const Booking = () => {
       readCoursesByLecturer(user.token, value)
         .then((res) => {
           setData(res.data);
-          
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }, [user, years, term]);
+  }, [user,years,term]);
+
+  
 
   const handleSubmit = (id) => {
      //console.log(id);

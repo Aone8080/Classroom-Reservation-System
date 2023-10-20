@@ -4,31 +4,27 @@ import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
 import {createCourse,readAllCourse,updateCourse,deleteCourse}from "../../functions/course"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
 
 const ManagementCourse = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [course_id, setCourse_id] = useState("");
   const [subj_code, setSubj_code] = useState("");
-  const [subj_name, setSubj_name] = useState("");   //ยังไม่ได้set
-  const [Years, setYears] = useState("");//
-  const [Term, setTerm] = useState("");//
-  const [day, setDay] = useState("");//
-  
-  const [time_begin, setTime_begin] = useState(""); //ยังไม่ได้set
-  const [time_end, setTime_end] = useState("");     //ยังไม่ได้set
-  const [lect_id, setLect_id] = useState("");       //ยังไม่ได้set
-  const [lect_name, setLect_name] = useState("");   //ยังไม่ได้set
-  const [std_code, setStdCode] = useState([]);      //ยังไม่ได้set
-  const [std_name, setStdName] = useState([]);      //ยังไม่ได้set
-  const [major_id,setMajor_id] = useState("2519");             //ยังไม่ได้set
-  const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");      //ยังไม่ได้set
-  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์"); //ยังไม่ได้set
-  
-  const [roomtype_id, setRoomtype_id] = useState(""); //fetch 
+  const [subj_name, setSubj_name] = useState(""); 
+  const [Years, setYears] = useState("");
+  const [Term, setTerm] = useState("");
+  const [day, setDay] = useState("");
+  const [time_begin, setTime_begin] = useState(""); 
+  const [time_end, setTime_end] = useState("");     
+  const [lect_id, setLect_id] = useState("");       
+  const [lect_name, setLect_name] = useState("");    
   const [room_id, setRoom_id] = useState("");
-  const [capacity, setCapacity] = useState("");
-  const [building, setBuilding] = useState("");  
-
+  const [std_code, setStdCode] = useState([]);      //ยังไม่ได้set ไปเพิ่มในหน้า StdinCourse
+  const [std_name, setStdName] = useState([]);      //ยังไม่ได้set ไปเพิ่มในหน้า StdinCourse
+  const [major_id,setMajor_id] = useState("2519");
+  const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
 
 
 //------------------------------------------cerate Course--------------------------------------------
@@ -41,6 +37,7 @@ const handleModalShow = () => setShowModal(true);
  useEffect(() => {
   setCourse_id(Years + Term + subj_code);
 }, [Years, Term, subj_code]);
+
 const handleSubmit = async (e) => {
   e.preventDefault();
   const value ={
@@ -48,9 +45,6 @@ const handleSubmit = async (e) => {
     subj_name,
     course_id,
     room_id,
-    roomtype_id,
-    building,
-    capacity,
     Years,
     Term,
     day,
@@ -61,18 +55,19 @@ const handleSubmit = async (e) => {
     std_code,
     std_name,
     major_id,
-    major_name,
+    major_name
   };
 
   createCourse(user.token, value)
     .then((res) => {
-      console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Course Success"); 
+      //alert("create Course Success"); 
+      message.success("create Course Success");
     })
     .catch((err) => {
-      console.log(err.response.data);
+      //console.log(err.response.data);
+      message.error(err.response.data);
     });
 };
 //------------------------------------------readAllCourse and loadData---------------------------------
@@ -120,28 +115,32 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateCourse(user.token, values.course_id, values)
       .then((res) => {
-        alert("Update Course Success");
+        //alert("Update Course Success");
+        message.success("Update Course Success");
         loadData(user.token);
         setEditModal(false);
       })
-      .catch((err) => console.log(err.response.data));
+      .catch((err) => message.error(err.response.data));
+      
   };
 //------------------------------------------deleteCourse---------------------------------------------
   const handleRemove = (id) => {
     if (window.confirm("Are You Sure Delete!!")) { 
       deleteCourse(user.token, id)                   
         .then((res) => {                           
-          console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Course Success');               
         })
         .catch((err) => {
-          console.log(err.response);
+          //console.log(err.response);
+          message.error(err.response.data);
         });
     }
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+    <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลการลงทะเบียน</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -149,8 +148,8 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
-        <table className="table table-bordered shadow custom-table">
+      <div className="py-2 " style={{ maxHeight: '500px', overflowY: 'auto' }}>
+        <table className="table table-bordered shadow custom-table ">
           <thead>
             <tr>
               <th className="text-center" scope="col">
@@ -182,7 +181,7 @@ const handleSubmit = async (e) => {
           </thead>
           <tbody>
             {data.map((item,index)=>(
-            <tr key={index}>
+            <tr key={index} >
               <td className="text-center">{item.subj_code}</td>
               <td className="text-center">{item.subj_name}</td>
               <td className="text-center">{item.lect_name}</td>
@@ -207,7 +206,7 @@ const handleSubmit = async (e) => {
 
 
       {/* MODAL เพิ่มข้อมูล */}
-      <Modal show={showModal} onHide={handleModalClose} className="custom-modal">
+      <Modal show={showModal} onHide={handleModalClose} className="custom-modal" >
         <Modal.Header closeButton>
           <Modal.Title className="text-center w-100">
             <h3 className="titleModal">เพิ่มข้อมูลการลงทะเบียน</h3>
@@ -221,8 +220,8 @@ const handleSubmit = async (e) => {
                 <input
                   className="form-control"
                   type="text"
-                  name="subj_name"
-                  onChange={(e) => setSubj_name(e.target.value)}
+                  name="subj_code"
+                  onChange={(e) => setSubj_code(e.target.value)}
                 />
               </div>
 
@@ -253,16 +252,18 @@ const handleSubmit = async (e) => {
                 name="term"
                 onChange={(e) => setTerm(e.target.value)} 
                 >
+                <option value="">เลือก...</option>
                 <option value="1">เทอม 1</option>
                 <option value="2">เทอม 2</option>
               </select>
               </div>
+
               <div className="form-group mt-3">
                 <h3>วัน</h3> 
                 <select
                 className="form-control "
                 name="day"
-                onChange={(e) => setTerm(e.target.value)} 
+                onChange={(e) => setDay(e.target.value)} 
                 >
                 <option value="จันทร์">วันจันทร์</option>
                 <option value="อังคาร">วันอังคาร</option>
@@ -270,15 +271,6 @@ const handleSubmit = async (e) => {
                 <option value="พฤหัสบดี">วันพฤหัสบดี</option>
                 <option value="ศุกร์">วันศุกร์</option>
                </select>
-              </div>
-              <div className="form-group mt-3">
-                <h3>เทอมการศึกษา</h3>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="Term"
-                  onChange={(e) => setTerm(e.target.value)}
-                />
               </div>
               <div className="form-group mt-3">
                 <h3>เวลาเริ่มต้น:</h3>
@@ -334,18 +326,7 @@ const handleSubmit = async (e) => {
                   name="room_id"
                   onChange={(e) => setRoom_id(e.target.value)}
                 />
-              </div> <div className="form-group mt-3">
-                <h3>เทอมการศึกษา</h3>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="Term"
-                  onChange={(e) => setTerm(e.target.value)}
-                />
-              </div>
-              
-
-
+              </div> 
             </form>
           </div>
         </Modal.Body>
@@ -402,7 +383,7 @@ const handleSubmit = async (e) => {
           <h3>เทอม</h3>
           <select
             className="form-control "
-            name="term"
+            name="Term"
             value={values.Term}
             onChange={handleEdit} 
           >

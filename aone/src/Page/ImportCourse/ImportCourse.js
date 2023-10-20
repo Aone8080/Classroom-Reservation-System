@@ -20,8 +20,6 @@ const ImportCourse = () => {
   const [major_id,setMajor_id] = useState("2519");
   const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");
   const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
-  const [roomtype_id, setRoomtype_id] = useState("1"); //1 ห้องเรียนค่าเริ่มต้น
-  const [capacity, setCapacity] = useState("60");      
 
   const [subj_code, setSubj_code] = useState("");
   const [subj_name, setSubj_name] = useState("");
@@ -50,9 +48,6 @@ const ImportCourse = () => {
     subj_name,
     course_id,
     room_id,
-    roomtype_id,
-    building,
-    capacity,
     Years,
     Term,
     day,
@@ -78,6 +73,7 @@ const ImportCourse = () => {
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
+      if (file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
       const reader = new FileReader();
 
       reader.onabort = () => console.log("file reading was aborted");
@@ -160,16 +156,22 @@ const ImportCourse = () => {
 
         setStdCode(filteredDataB);
         setStdName(filteredDataC);
-      };
-      reader.readAsBinaryString(file);
+      
+          handleModalShow();
+        };
+        reader.readAsBinaryString(file);
+      } else {
+        alert("ไฟล์ไม่ถูกต้อง โปรดอัปโหลดไฟล์ Excel (.xlsx) เท่านั้น");
+      }
     });
-    handleModalShow();  
   }, []);
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const { getRootProps, getInputProps } = useDropzone({ onDrop, accept: ".xlsx" });
+
 
   return (
     <div className="h-container">
-      <h1 className="big-title">Import ข้อมูลการลงทะเบียนเรียน</h1>
+      <h1 className="big-title mb-5">Import ข้อมูลการลงทะเบียนเรียน</h1>
       <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
       <div className="importfile" {...getRootProps()}>
         <input {...getInputProps()} className="hidden-input" />
@@ -188,10 +190,10 @@ const ImportCourse = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3 className="titleModal2">
+          <h3 className="titleModal2 ">
             ปีการศึกษา : {Years} ภาคการศึกษาที่ : {Term}
           </h3>
-          <div class="container text-center">
+          <div class="container text-center" style={{ maxHeight: '550px', overflowY: 'auto' }}>
             <div class="row">
               <div class="col text-start">
                 <h3 className="title">รหัสวิชา</h3>

@@ -40,6 +40,14 @@ export const updateUser= async (authtoken, values) => {
     });
   };
 
+  export const updatePassword= async (authtoken, values) => {
+    return await axios.put(`${process.env.REACT_APP_API}/user/updatepassword`,values, {
+      headers: {
+        authtoken
+      }
+    });
+  };
+
 
 
 export const deleteUser= async (authtoken, id) => { 

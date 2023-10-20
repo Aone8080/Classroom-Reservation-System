@@ -2,9 +2,12 @@ import { useState,useEffect } from "react";
 import { useSelector } from "react-redux";
 import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/th'; 
 //function
 import {createYearsTerm,readAllYearsTerm,updateYearsTerm,deleteYearsTerm}from "../../functions/years_term"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const ManagementYearsTerm = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -25,15 +28,17 @@ const handleSubmit = async (e) => {
   const newPost = {
     Years,
     Term,
-    date_begin,
-    date_end
+    date_begin: moment(date_begin).format('YYYY-MM-DD'),
+    date_end: moment(date_end).format('YYYY-MM-DD'),
   };
+  
+  
   createYearsTerm(user.token, newPost)
     .then((res) => {
-      console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create YearsTerm Success"); 
+      //alert("create YearsTerm Success");
+      message.success('create Years and Term Success'); 
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -78,7 +83,8 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateYearsTerm(user.token, values)
       .then((res) => {
-        alert("Update YearsTerm Success");
+        //alert("Update YearsTerm Success");
+        message.success('Update Years and Term Success');
         loadData(user.token);
         setEditModal(false);
       })
@@ -90,7 +96,8 @@ const handleSubmit = async (e) => {
       deleteYearsTerm(user.token, yid,tid)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Years and Term Success');               
         })
         .catch((err) => {
           console.log(err.response);
@@ -99,7 +106,8 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลวันเริ่มต้นและวันสิ้นสุดภาคการศึกษา</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -107,7 +115,7 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
@@ -163,18 +171,21 @@ const handleSubmit = async (e) => {
                 <input
                   className="form-control"
                   type="text"
+                  placeholder="2500-2566"
                   name="Years"
                   onChange={(e) => setYears(e.target.value)}
                 />
               </div>
               <div className="form-group mt-3">
-                <h3>เทอมการศึกษา</h3>
-                <input
-                  className="form-control"
-                  type="text"
+                <h3>เทอมการศึกษา</h3> 
+                <select
+                  className="form-control mt-3"
                   name="Term"
-                  onChange={(e) => setTerm(e.target.value)}
-                />
+                  onChange={(e) => setTerm(e.target.value)} 
+                >
+                  <option value="1">ภาคเรียนที่ 1</option>
+                  <option value="2">ภาคเรียนที่ 2</option>
+                </select>
               </div>
 
               <div className="form-group mt-3">
@@ -190,6 +201,7 @@ const handleSubmit = async (e) => {
                 <h3>วันสิ้นสุด</h3>
                 <input
                   className="form-control"
+                  placeholder="เดือน/วันที่/ปี"
                   type="date" 
                   name="date_end"
                   onChange={(e) => setDate_end(e.target.value)}

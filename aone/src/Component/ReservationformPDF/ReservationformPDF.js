@@ -1,6 +1,7 @@
 import React from 'react';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/th';
 // นำเข้า font ที่ต้องการใช้
 import SarabunRegular from './THSarabunNew.ttf';
 

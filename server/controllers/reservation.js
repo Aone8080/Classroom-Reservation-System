@@ -332,6 +332,31 @@ exports.readReservationByDate = async (req, res) => {
   });
 };
 
+//--------------------  อ่านประวัติการจองจาก Year Term ---------------- 
+  exports.readReservationByYearTerm = async (req, res) => {
+    const { Year, Term } = req.params; 
+  
+    const sql = `
+      SELECT r.*, rd.reservation_date, rd.reservation_time,c.subj_code,s.subj_name,u.user_name,ro.capacity
+      FROM Reservation r
+      JOIN Reservation_detail rd ON r.reservation_id = rd.reservation_id
+      JOIN Course c ON r.course_id = c.course_id
+      JOIN users u ON r.user_id = u.user_id
+      JOIN Subject s ON c.subj_code = s.subj_code
+      JOIN room ro ON c.room_id = ro.room_id
+      WHERE c.Years = ? AND c.Term = ?
+    `;
+  
+    db.query(sql, [Year, Term], (error, results) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+      res.status(200).json(results);
+    });
+  };
+  
+
+
 
 //---------------อ่านประวัติการจองทั้งหมด ---------------- 
 exports.readAllReservation = async (req, res) => {

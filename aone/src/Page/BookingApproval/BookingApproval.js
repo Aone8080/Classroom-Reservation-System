@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { readAllreservation } from "../../functions/reservation";
+import { readAllreservation,reservationByYearTerm } from "../../functions/reservation";
+import { readAllYearsTerm} from "../../functions/years_term";
 import { Modal, Button } from "react-bootstrap";
 import {PDFDownloadLink } from '@react-pdf/renderer';//print(PDFDownloadLink)
 import ReservationformPDF from '../../Component/ReservationformPDF/ReservationformPDF'
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/th';
 
 const BookingApproval = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -14,7 +16,14 @@ const BookingApproval = () => {
   const [showModal, setShowModal] = useState(false);
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
-  //-------- 1: featch data
+
+
+
+
+
+
+
+  //1------------------------------------------readAllReservation and loadData---------------------------------
   const [data, setData] = useState([]);         
   const loadData = (authtoken) => { 
     readAllreservation(authtoken)
@@ -22,24 +31,58 @@ const BookingApproval = () => {
         setData(res.data);   
       })
       .catch((err) => {
-        console.log(err.response.data); 
+        //console.log(err.response.data); 
       });
   };
   useEffect(() => {       
     loadData(user.token);  
   }, []);
 
-  //-------- 2: เอา item ไปsetใน modal
+   //3 ถ้าเลือกปีเทอมจะ fetch ปีเทอมนั้นๆมาเเสดงเเทน readAllReservation
+   const loadReservationByYearTerm = (selectedValue) => {
+    const [Year, Term] = selectedValue.split(',');
+    if (user && user.token && Year && Term) { 
+       reservationByYearTerm(user.token, Year, Term)
+       .then((res) => {
+             setData(res.data);      
+       })
+       .catch((err) => {
+         console.log(err.response.data);
+       });
+    }else {
+      // ถ้าไม่มีข้อมูลใน Year หรือ Term ให้โหลดข้อมูลใหม่ด้วย loadData
+      loadData(user.token);
+  }
+ }; 
+//2-------------------------------------------------- fetch Year And Term มาเป็น value ใน input ---------------------------------
+  
+const [SelectYearTerm, setSelectYearTerm] = useState([]);
+useEffect(() => {
+  readAllYearsTerm(user.token)
+    .then((res) => {
+      setSelectYearTerm(res.data);
+    })
+    .catch((err) => {
+      //console.log(err.response.data);
+    });
+}, []);
+
+      
+    
+
+
+
+//--------------------------------------------------------เอาข้อมูลของคอร์สไปset ใน modal เพื่อตรวจสอบ ---------------------------------
+  // เอา item ไปsetใน modal
   const [selectedItem, setSelectedItem] = useState(null);
   const handleSubmit = (item) => {
     setSelectedItem(item);
      handleModalShow();
-     console.log(item);  
+      
   };
-  //ปลิ้นเอกสาร
-  const handleSubmitCreatePDF =()=>{
-    
-  }
+
+ 
+
   
 
   return (
@@ -47,6 +90,26 @@ const BookingApproval = () => {
     <div className="container-main-noborder">
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">รายการจองห้อง</h3>
+      </div>
+      <div className="mt-3 mb-1">
+        <label htmlFor="YearTerm" className="title2 me-2">
+          ค้นหา :
+          </label>
+          <select
+              className="ms-2"
+              name="YearTerm"
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                loadReservationByYearTerm(selectedValue);
+              }}
+            >
+              <option value="">ปีเทอมทั้งหมด</option>
+              {SelectYearTerm.map((item, index) => (
+                <option key={index} value={`${item.Years},${item.Term}`}>
+                  ปีการศึกษา{item.Years} เทอม {item.Term}
+                </option>
+              ))}
+            </select>
       </div>
 
       <div className="py-2">

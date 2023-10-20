@@ -5,15 +5,16 @@ import { Modal, Button } from "react-bootstrap";
 //function
 import {createStudentInCourse, readStudentInCourseByCourse_id,readAllStudentInCourse,deleteStudentInCourse}from "../../functions/std_reg_course"
 import {readAllCourse}from "../../functions/course"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
 const ManagementStdInCourse = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [std_code, setStd_code] = useState("");
   const [course_id, setCourse_id] = useState("");
  
 
-
-
-//fetch major มาเป็น value ใน input 
+//fetch Course_id มาเป็น value ใน input 
 const [SelectCourse_id, setSelectCourse_id] = useState([]);
 useEffect(() => {
   readAllCourse(user.token)
@@ -27,6 +28,7 @@ useEffect(() => {
 
   
 //------------------------------------------cerate Course--------------------------------------------
+
 //createModal
 const [showModal, setShowModal] = useState(false);
 const handleModalClose = () => setShowModal(false);
@@ -43,7 +45,8 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Student In Course Success"); 
+      //alert("create Student In Course Success");
+      message.success('create Student In Course Success');  
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -58,13 +61,12 @@ const [data, setData] = useState([]);
        setData(res.data);   
      })
      .catch((err) => {
-       console.log(err.response.data); 
+       //console.log(err.response.data); 
      });
  };
  useEffect(() => {       
    loadData(user.token);  
  }, []);
- console.log(data);
 
 
  //ถ้าเลือกคอร์สจะ fetch อันนี้เเทน
@@ -72,7 +74,6 @@ const [data, setData] = useState([]);
   readStudentInCourseByCourse_id(user.token, courseId)
     .then((res) => {
       setData(res.data);
-      console.log(data);
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -85,7 +86,8 @@ const [data, setData] = useState([]);
       deleteStudentInCourse(user.token, sid,cid)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Student In Course Success');                
         })
         .catch((err) => {
           console.log(err.response);
@@ -94,7 +96,8 @@ const [data, setData] = useState([]);
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลนักศึกษาในคอร์ส</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -119,8 +122,8 @@ const [data, setData] = useState([]);
             </select>
       </div>
 
-      <div className="py-2">
-        <table className="table table-bordered shadow custom-table">
+      <div className="py-2 "style={{ maxHeight: '500px', overflowY: 'auto' }} >
+        <table className="table table-bordered shadow custom-table" >
           <thead>
             <tr>
             <th className="text-center" scope="col">
@@ -135,7 +138,7 @@ const [data, setData] = useState([]);
               <th scope="col"></th>
             </tr>
           </thead>
-          <tbody>
+          <tbody >
             {data.map((item,index)=>(
             <tr key={index}>
               <td className="text-center">{item.subj_code}</td>
@@ -174,13 +177,19 @@ const [data, setData] = useState([]);
               </div>
 
               <div className="form-group mt-3">
-                <h3>ชื่อคอร์ส ต้องเเก้fetch</h3>
-                <input
+                <h3>คอร์ส</h3>
+                  <select
                   className="form-control"
-                  type="text"
-                  name="course_id"
+                  name="Course_id"
                   onChange={(e) => setCourse_id(e.target.value)}
-                />
+                >
+                  <option value="">เลือกคอร์ส</option>
+                  {SelectCourse_id.map((item, index) => (
+                    <option key={index} value={item.course_id}>
+                      {item.subj_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
             </form>

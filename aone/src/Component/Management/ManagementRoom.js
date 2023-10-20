@@ -4,7 +4,8 @@ import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
 import {createRoom,readAllRooms,readAllRoomsType,updateRoom,deleteRoom}from "../../functions/room"
-
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const ManagementRoom = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -47,7 +48,7 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Room Success"); 
+      message.success('create Room Success');
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -93,7 +94,8 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateRoom(user.token, values.room_id, values)
       .then((res) => {
-        alert("Update Room Success");
+        // alert("Update Room Success");
+        message.success('Update Room Success');
         loadData(user.token);
         setEditModal(false);
       })
@@ -105,7 +107,8 @@ const handleSubmit = async (e) => {
       deleteRoom(user.token, id)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token); 
+          message.success('Delete Room  Success');          
         })
         .catch((err) => {
           console.log(err.response);
@@ -114,7 +117,8 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลห้องเรียน</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -122,7 +126,7 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
@@ -146,7 +150,7 @@ const handleSubmit = async (e) => {
             <tr key={index}>
               <td className="text-center">{item.building}</td>
               <td className="text-center">{item.room_id}</td>
-              <td className="text-center">{item.capacity}</td>
+              <td className="text-center">{item.capacity} คน</td>
               <td className="text-center">{item.roomtype_name}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>

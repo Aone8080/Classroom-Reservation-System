@@ -28,6 +28,7 @@ const MyCalendar = () => {
         console.log(err.response.data);
       });
   }, []);
+  
 
 
   // 2 fetch dataมาลง room
@@ -42,11 +43,12 @@ const MyCalendar = () => {
       });
   };
   
+  
 
   
 
   useEffect(() => {
-    if (user && user.token) {
+    if (user && user.token && room_id) {
       readreservationByRoomid(user.token, room_id)
         .then((res) => {
           const convertedEvents = res.data.map((reservation) => {
@@ -64,6 +66,7 @@ const MyCalendar = () => {
         });
     }
   }, [user,room_id]);
+  
 
   return (
     <>

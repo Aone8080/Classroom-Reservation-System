@@ -4,6 +4,8 @@ import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
 import {createUser,readAllUser,updateUser,deleteUser}from "../../functions/user"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const ManagementUser = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -32,7 +34,8 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create User Success"); 
+      //alert("create User Success");
+      message.success('create User Success'); 
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -77,7 +80,8 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateUser(user.token, values)
       .then((res) => {
-        alert("Update User Success");
+        //alert("Update User Success");
+        message.success('Update User Success'); 
         loadData(user.token);
         setEditModal(false);
       })
@@ -89,7 +93,8 @@ const handleSubmit = async (e) => {
       deleteUser(user.token, id)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete User Success');                
         })
         .catch((err) => {
           console.log(err.response);
@@ -98,7 +103,8 @@ const handleSubmit = async (e) => {
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">จัดการข้อมูลผู้ใช้</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -106,7 +112,7 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>

@@ -46,8 +46,16 @@ const ImportStudent = () => {
     reader.onerror = () => console.log("file reading has failed");
     reader.onload = () => {
       const binaryStr = reader.result;
-      const workbook = XLSX.read(binaryStr, { type: "binary" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    // Check if the file is in the correct format (Excel .xlsx)
+    const fileType = acceptedFiles[0].type;
+    if (fileType !== "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+      alert("ไฟล์ไม่ถูกต้อง โปรดอัปโหลดไฟล์ Excel (.xlsx) เท่านั้น");
+      return; // Stop processing the file
+    }
+
+    const workbook = XLSX.read(binaryStr, { type: "binary" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
       const startRow = 8;
       const dataB = [];
@@ -72,16 +80,18 @@ const ImportStudent = () => {
 
       setStdCodes(filteredDataB);//2.set ลง state
       setStdNames(filteredDataE);
+
+      handleModalShow();
     };
     reader.readAsBinaryString(acceptedFiles[0]);
-    handleModalShow();
+   
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
 
   return (
     <div className="h-container">
-      <h1 className="big-title">Import ข้อมูลนักศึกษาใหม่</h1>
+      <h1 className="big-title mb-5">Import ข้อมูลนักศึกษาใหม่</h1>
       <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
       <div className="importfile" {...getRootProps()}>
         <input {...getInputProps()} className="hidden-input" />
@@ -96,7 +106,7 @@ const ImportStudent = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div class="container text-center">
+          <div class="container text-center" style={{ maxHeight: '550px', overflowY: 'auto' }}>
             <div class="row">
               <div class="col text-start">
                 <h3 className="title">คณะ</h3>

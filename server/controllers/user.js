@@ -47,6 +47,46 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+//----Update Password
+exports.updatePassword = async (req, res) => {
+    const { user_id, oldPassword, newPassword, confirmPassword } = req.body;
+  
+    // ตรวจสอบรหัสผ่านเก่า
+    const sql = 'SELECT password FROM Users WHERE user_id = ?';
+    db.query(sql, [user_id], async (error, results) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+  
+      const user = results[0];
+  
+      const isOldPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+  
+      if (!isOldPasswordCorrect) {
+        return res.status(400).json('รหัสผ่านเก่าไม่ถูกต้อง');
+      }
+  
+      // ตรวจสอบว่ารหัสผ่านใหม่และการยืนยันรหัสผ่านใหม่ตรงกันหรือไม่
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json('รหัสผ่านใหม่ไม่ตรงกัน');
+      }
+  
+      // ทำการเข้ารหัสรหัสผ่านใหม่
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+  
+      // อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
+      const updateSql = 'UPDATE Users SET password = ? WHERE user_id = ?';
+      db.query(updateSql, [hashedPassword, user_id], (updateError) => {
+        if (updateError) {
+          return res.status(500).json({ error: updateError });
+        }
+        res.status(200).json('รหัสผ่านได้รับการอัปเดตเรียบร้อยแล้ว');
+      });
+    });
+  };
+  
+
 
 //----Delete User
 exports.deleteUser = async (req, res) => {

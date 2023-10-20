@@ -7,9 +7,16 @@ import { useDispatch } from "react-redux";
 //React router
 import { useNavigate } from "react-router-dom";
 import { FaLock,FaUser  } from "react-icons/fa";
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
+
+
+
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+ 
 
   const [value, setValue] = useState({
     username: "",
@@ -37,7 +44,8 @@ const Login = () => {
     e.preventDefault();
     login(value)
       .then((res) => {
-        alert(res.data.payload.user.userName + " Login Success");
+
+        message.success("ยินดีต้อนรับ อาจารย์ "+res.data.payload.user.userName);
         dispatch({
           type: "LOGIN",
           payload: {
@@ -53,8 +61,8 @@ const Login = () => {
         roleBaseRedirect(res.data.payload.user.role);
       })
       .catch((err) => {
-        console.log(err.response.data);
-        alert(err.response.data);
+        //console.log(err.response.data);
+        message.error(err.response.data);
       });
   };
 

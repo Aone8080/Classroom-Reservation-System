@@ -82,9 +82,6 @@ exports.importCourse = async (req, res) => {
     lect_id,
     lect_name,
     std_code,
-    roomtype_id,
-    capacity,
-    building,
     major_id,
     major_name,
     std_name,
@@ -122,36 +119,7 @@ exports.importCourse = async (req, res) => {
   });
   queries.push(insertSubjectQuery);
 
-  // 2. Insert into room
-  const insertRoomQuery = new Promise((resolve, reject) => {
-    db.query(
-      "SELECT * FROM room WHERE room_id = ?",
-      [room_id],
-      (error, results) => {
-        if (error) {
-          reject(error);
-        } else if (results.length > 0) {
-          // If the room_id already exists, skip this insertion.
-          resolve();
-        } else {
-          // If the room_id does not exist, proceed with the insertion.
-          db.query(
-            "INSERT INTO room (room_id, roomtype_id, capacity, building) VALUES (?, ?, ?, ?)",
-            [room_id, roomtype_id, capacity, building],
-            (error, results) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(results);
-              }
-            }
-          );
-        }
-      }
-    );
-  });
-  queries.push(insertRoomQuery);
-
+ 
   // 3. Insert course
   const insertCourseQuery = new Promise((resolve, reject) => {
     db.query(

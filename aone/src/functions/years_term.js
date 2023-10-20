@@ -28,6 +28,15 @@ export const readYearsTerm= async (authtoken,yid,tid) => {
   });
 };
 
+//หาวันปีจากdate
+export const readYearsTermFromday= async (authtoken,id) => {
+  return await axios.get(`${process.env.REACT_APP_API}/calendar/${id}`,{
+    headers: {
+        authtoken, 
+      },
+  });
+};
+
 
 
 

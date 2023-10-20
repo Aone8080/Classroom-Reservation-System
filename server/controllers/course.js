@@ -45,6 +45,31 @@ exports.readCoursesByLecturer = async (req, res) => {
 };
 
 
+//todo ยังไม่ได้ใช้ รอพัฒนาต่อ
+// --- หาช่วงปีเทอม ที่อาจารคนนี้มีสอน     
+exports.readCoursesByLecturerAndDate = async (req, res) => {
+  const { lect_id, date } = req.body;
+  const sql = `
+  SELECT c.course_id, c.subj_code, s.subj_name, c.room_id, cal.Years, cal.Term
+  FROM course c
+  JOIN Teach t ON c.course_id = t.course_id
+  JOIN Subject s ON c.subj_code = s.subj_code
+  JOIN (
+      SELECT Years, Term
+      FROM Calendar
+      WHERE date_begin <= ? AND date_end >= ?
+  ) cal ON c.Years = cal.Years AND c.Term = cal.Term
+  WHERE t.lect_id = ?;
+  `;
+  db.query(sql, [ date,date,lect_id], (error, results) => {
+    if (error) {
+      return res.status(500).json({ error });
+    }
+    res.status(200).json(results);
+  });
+};
+
+
 
 
 
@@ -83,9 +108,9 @@ exports.deleteCourse = async (req, res) => {
 //----updateCourse
 exports.updateCourse = async (req, res) => {
   const { id } = req.params;  //id = course_id 
-  const {subj_code, room_id, Years, Term, day, time_begin, time_end} = req.body;
-  const sql = "UPDATE course SET subj_code = ?, room_id = ?, Years = ?, Term = ?, day = ?, time_begin = ?, time_end = ? WHERE course_id = ?";
-  db.query(sql, [subj_code, room_id, Years, Term, day, time_begin, time_end, id], (error, results) => {
+  const {subj_code, room_id, Years, Term, day, time} = req.body;
+  const sql = "UPDATE course SET subj_code = ?, room_id = ?, Years = ?, Term = ?, day = ?, time = ? WHERE course_id = ?";
+  db.query(sql, [subj_code, room_id, Years, Term, day, time, id], (error, results) => {
       if (error) {
           return res.status(500).json({ error });
       }

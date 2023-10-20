@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 // Layout
-import Navbar from "./Component/Navbar/Navbar";
+import MyNavbar from "./Component/Navbar/MyNavbar";
+
 
 // functions
 import { currentUser } from "./functions/auth";
@@ -16,14 +17,26 @@ import EditProfile from "./Page/EditProfile/EditProfile";
 import HomeAdmin from "./Page/HomeAdmin/HomeAdmin";
 import ImportCourse from "./Page/ImportCourse/ImportCourse";
 import ImportStudent from "./Page/ImportStudent/ImportStudent";
-import DataManagement from "./Page/DataManagement/DataManagement";
 import BookingApproval from "./Page/BookingApproval/BookingApproval";
+
+import ManagementRoomType from './Component/Management/ManagementRoomType'
+import ManagementRoom from './Component/Management/ManagementRoom'
+import ManagementSubject from './Component/Management/ManagementSubject'
+import ManagementLecturer from './Component/Management/ManagementLecturer'
+import ManagementStudent from './Component/Management/ManagementStudent'
+import ManagementCourse from './Component/Management/ManagementCourse'
+import ManagementStdInCourse from './Component/Management/ManagementStdInCourse'
+import ManagementYearsTerm from './Component/Management/ManagementYearsTerm'
+import ManagementUser from './Component/Management/ManagementUser'
+
+
+
 
 //Protect Routes
 import UserRoute from "./Protect_Rout/UserRoute"; 
 import AdminRoute from "./Protect_Rout/AdminRoute";
 // redux
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 
 
 function App() {
@@ -50,23 +63,35 @@ function App() {
 
   return (
     <>
-      <Navbar />
+      <MyNavbar />
       <Routes>
         {/* user */}
         <Route path="/"                 element={<Home/>} />
         <Route path="/login"            element={<Login />} />
-        <Route path="/user/index"       element={<UserRoute>  <HomeUser />   </UserRoute>}/>
+        <Route path="/user/index"       element={<UserRoute>  <HomeUser /> </UserRoute>}/>
         <Route path="/calendar"         element={<MyCalendar />} />
         <Route path="/booking"          element={<Booking />} />
         <Route path="/booking/:id"      element={<SinglePageBooking />} />
         <Route path="/booking-history"  element={<BookingHistory />} />
         <Route path="/edit-profile"     element={<EditProfile />} />
+
         {/* admin */}
         <Route path="/admin/index"      element={<AdminRoute>  <HomeAdmin/>       </AdminRoute>}/>
         <Route path="/importcourse"     element={<AdminRoute>   <ImportCourse/>    </AdminRoute>}/>
         <Route path="/importstudent"    element={<AdminRoute>   <ImportStudent/>   </AdminRoute>}/>
-        <Route path="/data-management"  element={<AdminRoute>   <DataManagement/>  </AdminRoute>}/>
         <Route path="/booking-approval" element={<AdminRoute>   <BookingApproval/> </AdminRoute>}/>
+
+        <Route path="/data-managementroom"        element={<AdminRoute>   <ManagementRoom/>        </AdminRoute>}/>
+        <Route path="/data-managementroomtype"    element={<AdminRoute>   <ManagementRoomType/>    </AdminRoute>}/>
+        <Route path="/data-managementcourse"      element={<AdminRoute>   <ManagementCourse/>      </AdminRoute>}/>
+        <Route path="/data-managementlecturer"    element={<AdminRoute>   <ManagementLecturer/>    </AdminRoute>}/>
+        <Route path="/data-managementstdincourse" element={<AdminRoute>   <ManagementStdInCourse/> </AdminRoute>}/>
+        <Route path="/data-managementstudent"     element={<AdminRoute>   <ManagementStudent/>     </AdminRoute>}/>
+        <Route path="/data-managementsubject"     element={<AdminRoute>   <ManagementSubject/>     </AdminRoute>}/>
+        <Route path="/data-managementyearsterm"   element={<AdminRoute>   <ManagementYearsTerm/>   </AdminRoute>}/>
+        <Route path="/data-managementuser"        element={<AdminRoute>   <ManagementUser/>        </AdminRoute>}/>
+
+        
        
     </Routes>
     </>

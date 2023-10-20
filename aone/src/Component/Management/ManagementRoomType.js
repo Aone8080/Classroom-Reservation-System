@@ -4,7 +4,8 @@ import { FaPlus, FaTrash, FaRegEdit } from "react-icons/fa";
 import { Modal, Button } from "react-bootstrap";
 //function
 import {createRoomType,readAllRoomsType,updateRoomType,deleteRoomType}from "../../functions/room"
-
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const ManagementRoomType = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -28,10 +29,12 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Room Success"); 
+      //alert("create Room Success");
+      message.success('create Room Type Success'); 
     })
     .catch((err) => {
       console.log(err.response.data);
+      message.error(err.response.data);
     });
 };
 //------------------------------------------readAllRoomType and loadData---------------------------------
@@ -70,11 +73,12 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     updateRoomType(user.token, values.roomtype_name, values)
       .then((res) => {
-        alert("Update Room Success");
+        //alert("Update Room Success");
+        message.success('Update Room Success');
         loadData(user.token);
         setEditModal(false);
       })
-      .catch((err) => console.log(err.response.data));
+      .catch((err) => message.error(err.response.data));
   };
 //------------------------------------------deleteRoomTypeType---------------------------------------------
   const handleRemove = (id) => {
@@ -82,16 +86,19 @@ const handleSubmit = async (e) => {
       deleteRoomType(user.token, id)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Room type Success');               
         })
         .catch((err) => {
           console.log(err.response);
+          message.error(err.response.data);
         });
     }
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลชนิดห้อง</h3>
         <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -99,7 +106,7 @@ const handleSubmit = async (e) => {
         </button>
       </div>
 
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>

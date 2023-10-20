@@ -6,6 +6,7 @@ const {
     createReservation,
     readAllReservation,
     readReservationByDate,
+    readReservationByYearTerm,
     readReservationById,
     readReservationByRoomId,
     deleteReservation,
@@ -20,7 +21,8 @@ router.post('/reservation/findDayTime', findAvailableTimeSlots);    //หาว�
 router.post('/reservation', createReservation);                     //จองห้อง
 router.get('/reservation', readAllReservation);                     //อ่านประวัติการจองทั้งหมด
 router.get('/reservationbydate', readReservationByDate);            //อ่านประวัติการจองจากวันที่
-router.get('/reservation/byuserid/:id', readReservationById);       //อ่านประวัติการจองจาก user_id
-router.get('/reservation/byroomid/:id', readReservationByRoomId);   //อ่านประวัติการจองจาก room_id
+router.get('/reservation/:Year/:Term', readReservationByYearTerm);            //อ่านประวัติการจองจากปีเทอม
+router.get('/reservationbyuserid/:id', readReservationById);       //อ่านประวัติการจองจาก user_id
+router.get('/reservationbyroomid/:id', readReservationByRoomId);   //อ่านประวัติการจองจาก room_id
 router.delete('/reservation/:id', deleteReservation);               //ลบการจอง
 module.exports = router;

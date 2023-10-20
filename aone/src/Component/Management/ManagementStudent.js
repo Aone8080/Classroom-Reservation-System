@@ -5,6 +5,9 @@ import { Modal, Button } from "react-bootstrap";
 //function
 import {createStudent,readAllStudent,updateStudent,deleteStudent}from "../../functions/student"
 import { readAllMajor}from "../../functions/major"
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
 
 const ManagementStudent = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -46,7 +49,8 @@ const handleSubmit = async (e) => {
       console.log(res.data);
       loadData(user.token);
       handleModalClose();
-      alert("create Student Success"); 
+      //alert("create Student Success"); 
+      message.success('create Student Success');
     })
     .catch((err) => {
       console.log(err.response.data);
@@ -93,7 +97,8 @@ const [data, setData] = useState([]);
     e.preventDefault();
     updateStudent(user.token, values.std_code, values)
       .then((res) => {
-        alert("Update Student Success");
+        //alert("Update Student Success");
+        message.success('Update Student Success');
         loadData(user.token);
         setEditModal(false);
       })
@@ -105,7 +110,8 @@ const [data, setData] = useState([]);
       deleteStudent(user.token, id)                   
         .then((res) => {                           
           console.log(res);
-          loadData(user.token);               
+          loadData(user.token);
+          message.success('Delete Student Success');               
         })
         .catch((err) => {
           console.log(err.response);
@@ -114,7 +120,8 @@ const [data, setData] = useState([]);
   };
 
   return (
-    <div className="con">
+    <div className="container-main-noborder">
+      <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
           <h3 className="title">ข้อมูลนักศึกษา</h3>
           <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
@@ -122,7 +129,7 @@ const [data, setData] = useState([]);
           </button>
       </div>
       
-      <div className="py-2">
+      <div className="py-2" style={{ maxHeight: '500px', overflowY: 'auto' }}>
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>

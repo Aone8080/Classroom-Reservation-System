@@ -2,7 +2,8 @@ import React, { useState,useEffect } from "react";
 import "./SinglePageBooking.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import moment from 'moment/min/moment-with-locales';
+import moment from 'moment';
+import 'moment/locale/th';
 // Function
 import { findDayTime, reservation} from "../../functions/reservation";
 

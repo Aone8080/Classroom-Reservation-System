@@ -22,6 +22,18 @@ export const reservation = async (authtoken, value) => {
 };
 
 
+
+//todo testgood
+export const reservationByYearTerm= async (authtoken,Year,Term) => {
+  return await axios.get(`${process.env.REACT_APP_API}/reservation/${Year}/${Term}`,{
+    headers: {
+        authtoken, 
+      },
+  });
+  };
+
+
+
   //---- readAllreservation (อ่านประวัติการจองห้องทั้งหมด)
   export const readAllreservation = async (authtoken) => { 
     return await axios.get(`${process.env.REACT_APP_API}/reservation`, {
@@ -35,16 +47,18 @@ export const reservation = async (authtoken, value) => {
 
   //---- readreservationByid (อ่านประวัติการจองจาก user_id)
   export const readreservationByid = async (authtoken, ID) => { 
-    return await axios.get(`${process.env.REACT_APP_API}/reservation/byuserid/${ID}`, {
+    return await axios.get(`${process.env.REACT_APP_API}/reservationbyuserid/${ID}`, {
       headers: {
         authtoken,
       },
     });
   };
 
+
+
     //---- readreservationByid (อ่านประวัติการจองจาก room_id)
     export const readreservationByRoomid = async (authtoken, ID) => { 
-      return await axios.get(`${process.env.REACT_APP_API}/reservation/byroomid/${ID}`, {
+      return await axios.get(`${process.env.REACT_APP_API}/reservationbyroomid/${ID}`, {
         headers: {
           authtoken,
         },
