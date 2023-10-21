@@ -55,30 +55,30 @@ const MyNavbar = () => {
              <NavLink to="/booking-approval" activeClassName="selected"><li>ตรวจสอบคำร้องขอจองห้องเรียน</li></NavLink>
             
 
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   เเก้ไขข้อมูลระบบ
                   </a>
-                  <ul class="dropdown-menu">
-                    <li><Link to="/data-managementroomtype" class="dropdown-item" >ข้อมูลชนิดห้อง</Link></li>
-                    <li><Link to="/data-managementroom" class="dropdown-item" > ข้อมูลห้องเรียน</Link></li>
-                    <li><Link to="/data-managementyearsterm" class="dropdown-item" > ข้อมูลปีเทอม</Link></li>
-                    <li><Link to="/data-managementstudent" class="dropdown-item" > ข้อมูลนักศึกษา</Link></li>
-                    <li><Link to="/data-managementcourse" class="dropdown-item" > ข้อมูลการลงทะเบียน</Link></li>
-                    <li><Link to="/data-managementstdincourse" class="dropdown-item" > ข้อมูลนักเรียนในคอร์ส</Link></li>
-                    <li><Link to="/data-managementlecturer" class="dropdown-item" >ข้อมูลอาจารย์</Link></li>
-                    <li><Link to="/data-managementsubject" class="dropdown-item" > ข้อมูลวิชา</Link></li>
-                    <li><Link to="/data-managementuser" class="dropdown-item" > จัดการข้อมูลผู้ใช้</Link></li>
+                  <ul className="dropdown-menu">
+                    <li><Link to="/data-managementroomtype" className="dropdown-item" >ข้อมูลชนิดห้อง</Link></li>
+                    <li><Link to="/data-managementroom" className="dropdown-item" > ข้อมูลห้องเรียน</Link></li>
+                    <li><Link to="/data-managementyearsterm" className="dropdown-item" > ข้อมูลปีเทอม</Link></li>
+                    <li><Link to="/data-managementstudent" className="dropdown-item" > ข้อมูลนักศึกษา</Link></li>
+                    <li><Link to="/data-managementcourse" className="dropdown-item" > ข้อมูลการลงทะเบียน</Link></li>
+                    <li><Link to="/data-managementstdincourse" className="dropdown-item" > ข้อมูลนักเรียนในคอร์ส</Link></li>
+                    <li><Link to="/data-managementlecturer" className="dropdown-item" >ข้อมูลอาจารย์</Link></li>
+                    <li><Link to="/data-managementsubject" className="dropdown-item" > ข้อมูลวิชา</Link></li>
+                    <li><Link to="/data-managementuser" className="dropdown-item" > จัดการข้อมูลผู้ใช้</Link></li>
                   </ul>
               </li>
 
-              <li class="nav-item dropdown ">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <li className="nav-item dropdown ">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                      Admin
                   </a>
-                  <ul class="dropdown-menu">
-                    <li><Link to="/edit-profile" class="dropdown-item" >เเก้ไขข้อมูลส่วนตัว</Link></li>
-                    <li><Link  onClick={logout} class="dropdown-item" > <BiLogIn/> ออกจากระบบ</Link></li>
+                  <ul className="dropdown-menu">
+                    <li><Link to="/edit-profile" className="dropdown-item" >เเก้ไขข้อมูลส่วนตัว</Link></li>
+                    <li><Link  onClick={logout} className="dropdown-item" > <BiLogIn/> ออกจากระบบ</Link></li>
                   </ul>
               </li>
            </ul>
@@ -90,13 +90,13 @@ const MyNavbar = () => {
                 <NavLink to="/booking"  activeClassName="selected"> <li>จองห้องเรียน</li></NavLink>
                 <NavLink to="/booking-history" activeClassName="selected"> <li>ประวัติการจองห้องเรียน</li></NavLink>
 
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <li className="nav-item dropdown">
+                  <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   อาจารย์ {user.userName}
                   </a>
-                  <ul class="dropdown-menu">
-                    <li><Link to="/edit-profile" class="dropdown-item" >เเก้ไขข้อมูลส่วนตัว</Link></li>
-                    <li><Link  onClick={logout} class="dropdown-item" > <BiLogIn/> ออกจากระบบ</Link></li>
+                  <ul className="dropdown-menu">
+                    <li><Link to="/edit-profile" className="dropdown-item" >เเก้ไขข้อมูลส่วนตัว</Link></li>
+                    <li><Link  onClick={logout} className="dropdown-item" > <BiLogIn/> ออกจากระบบ</Link></li>
                   </ul>
                 </li>
             </ul>

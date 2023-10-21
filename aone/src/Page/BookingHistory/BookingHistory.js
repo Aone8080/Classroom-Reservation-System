@@ -66,7 +66,7 @@ const BookingHistory = () => {
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr>
+              <tr key={index}>
                 <td className="text-center">{item.room_id}</td>
                 <td className="text-center">{item.subj_name}</td>
                 <td className="text-center">{item.subj_code}</td>

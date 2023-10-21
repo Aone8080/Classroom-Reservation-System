@@ -1,5 +1,5 @@
 
-// userReducer.js (โปรเจกต์ที่ 2)
+// userReducer.js 
 export function userReducer2(state = null, action) {
   switch (action.type) {
     case "LOGIN":
@@ -11,8 +11,11 @@ export function userReducer2(state = null, action) {
       return state;
   }
 }
+
+
      
-  
+//----------------code เวลา set dispatch หรือเปลียนค่า-----------------//
+
 // dispatch({                                                
 //   type: "LOGIN",                                  
 //   payload: {                                       

@@ -41,7 +41,7 @@ exports.readCalendar = async (req, res) => {
 //---หาช่วงเวลาของ ปีเทอมนั้นๆ
 exports.readCalendarBydate = async (req, res) => {
     const { id } = req.params;
-    const sql = 'SELECT Years, Term FROM Calendar WHERE date_begin <= ? AND date_end >= ?';
+    const sql = 'SELECT * FROM Calendar WHERE date_begin <= ? AND date_end >= ?';
     db.query(sql, [id, id], (error, results) => {
         if (error) {
             return res.status(500).json({ error });

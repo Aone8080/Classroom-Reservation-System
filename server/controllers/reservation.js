@@ -188,7 +188,7 @@ for (const room_id of roomIds) {
 
 //todo------------------------------------------------F. เเปลงข้อมูลตัดข้อมูลที่ไม่ใช้ออกก่อนส่งไปหน้าบ้าน ---------------------------------------------------------------------------
 
-//ข้อ 14
+//ข้อ 14    (1.ตัดวันที่ตรงกับเสาร์อาทิตย์ออก 2.เเปลงAm,Pm เป็นช่วงเช้าช่วงบ่าย)
 const transformScheduleData = (scheduleData) => {
   const transformedData = {};
 
@@ -198,19 +198,23 @@ const transformScheduleData = (scheduleData) => {
     for (const date in scheduleData[room_id]) {
       const timeData = scheduleData[room_id][date];
 
-      // ตรวจสอบว่าช่วงเช้าและช่วงบ่ายไม่ว่างทั้งคู่หรือไม่
-      if (timeData["AM"] !== 1 || timeData["PM"] !== 1) {
-        // ถ้าไม่ว่างทั้งคู่ให้เพิ่มข้อมูลลงใน transformedData
-        transformedData[room_id][date] = {};
+      // ตรวจสอบว่าวันที่ไม่ใช่วันเสาร์หรืออาทิตย์
+      const jsDate = new Date(date);
+      if (jsDate.getDay() !== 0 && jsDate.getDay() !== 6) {
+        // ตรวจสอบว่าช่วงเช้าและช่วงบ่ายไม่ว่างทั้งคู่หรือไม่
+        if (timeData["AM"] !== 1 || timeData["PM"] !== 1) {
+          // ถ้าไม่ว่างทั้งคู่ให้เพิมข้อมูลลงใน transformedData
+          transformedData[room_id][date] = {};
 
-        // แปลง "AM": 0 เป็นช่วงเช้า
-        if (timeData["AM"] === 0) {
-          transformedData[room_id][date]["ช่วงเช้า"] = 0;
-        }
+          // แปลง "AM": 0 เป็นช่วงเช้า
+          if (timeData["AM"] === 0) {
+            transformedData[room_id][date]["ช่วงเช้า"] = 0;
+          }
 
-        // แปลง "PM": 0 เป็นช่วงบ่าย
-        if (timeData["PM"] === 0) {
-          transformedData[room_id][date]["ช่วงบ่าย"] = 0;
+          // แปลง "PM": 0 เป็นช่วงบ่าย
+          if (timeData["PM"] === 0) {
+            transformedData[room_id][date]["ช่วงบ่าย"] = 0;
+          }
         }
       }
     }
@@ -255,7 +259,7 @@ const allResult = transformDataToallResult(transformedData);
       //roomSchedules: roomSchedules,                 //D.Room
       //combinedRoomSchedules:combinedRoomSchedules,  //E.ผลลัพ
       //transformedData:transformedData               //F.ตัดข้อมูลผลลัพที่ไม่ได้ใช้
-      allResult:allResult                             //ส่งผลลัพจัดเรียงไปหน้าบ้าน
+      allResult:allResult                           //ส่งผลลัพจัดเรียงไปหน้าบ้าน
     });
   } catch (error) {
     console.error("Error:", error);

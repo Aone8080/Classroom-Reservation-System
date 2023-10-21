@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {  readYearsTermFromday } from "../../functions/years_term";
 import { readCoursesByLecturer } from "../../functions/course";
 
+
 const Booking = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const navigate = useNavigate();
@@ -15,20 +16,23 @@ const Booking = () => {
   
   const [years, setYears] = useState("");
   const [term, setTerm] = useState("");
+  const [date_BeginYearsTerm, setDate_BeginYearsTerm] = useState("");
+  const [date_EndYearsTerm, setDate_EndYearsTerm] = useState("");
+
   const [data, setData] = useState([]);
   
     
-
-
 // 1---featch ข้อมูลหาว่าเวลาตอนนี้ตรงกับเทอมไหน
 useEffect(() => {
   if (user && user.token) {
     readYearsTermFromday(user.token,Today)
       .then((res) => {
         if (res.data.length > 0) {
-          const { Years, Term } = res.data[0]; // นำข้อมูลจาก res.data
+          const { Years, Term, date_begin, date_end } = res.data[0]; // นำข้อมูลจาก res.data
           setYears(Years.toString()); // แปลงเป็นข้อความ (string) และกำหนดให้ years
-          setTerm(Term.toString()); 
+          setTerm(Term.toString());
+          setDate_BeginYearsTerm(date_begin.toString());
+          setDate_EndYearsTerm(date_end.toString()); 
         }
       })
       .catch((error) => {
@@ -58,8 +62,8 @@ useEffect(() => {
   
 
   const handleSubmit = (id) => {
-     //console.log(id);
-     navigate(`/booking/${id}`);
+    navigate(`/booking/${id}`, { state: { years, term, date_BeginYearsTerm, date_EndYearsTerm } }); 
+    //ส่ง state years, term ไปหน้า SinglePageBooking  
   };
 
   return (
@@ -90,7 +94,7 @@ useEffect(() => {
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <tr>
+              <tr key={index}>
                 <td className="text-center">{item.subj_code}</td>
                 <td className="text-center">{item.subj_name}</td>
                 <td className="text-center">{item.room_id}</td>
@@ -109,7 +113,9 @@ useEffect(() => {
       </div>
     </div>
     </>
+    
   );
+  
 };
 
 export default Booking;

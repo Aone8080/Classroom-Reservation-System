@@ -1,9 +1,10 @@
 
 import { combineReducers } from "redux";
-import { userReducer2 } from "./userReducer2"; // ใช้ชื่อ userReducer2 แทน
+import { userReducer2 } from "./userReducer2"; 
+
 
 const rootReducer = combineReducers({
-  user: userReducer2, 
+  user: userReducer2,
 });
 
 export default rootReducer;
