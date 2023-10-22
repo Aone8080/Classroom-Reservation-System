@@ -116,29 +116,23 @@ const handleSubmit = async (e) => {
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">username</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อ-นามสกุล</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">สถานะ</h3>
-              </th>
+              <th className="titleTh text-center" scope="col">username</th>
+              <th className="titleTh text-center" scope="col">ชื่อ-นามสกุล</th>
+              <th className="titleTh text-center" scope="col">สถานะ</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <td className="text-center">{item.user_id}</td>
-              <td className="text-center">{item.user_name}</td>
-              <td className="text-center">{item.role}</td>
-              <td className="text-center">
+              <td className="titleTd text-center">{item.user_id}</td>
+              <td className="titleTd text-center">{item.user_name}</td>
+              <td className="titleTd text-center">{item.role}</td>
+              <td className="titleTd text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.user_id)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.user_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

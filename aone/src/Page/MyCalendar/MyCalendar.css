@@ -8,6 +8,7 @@
 }
 
 
+
 /*-------------- Custom FullCalendar  นาฬิกา ------------------*/
 /* สีปุ่มต่างๆ */
 .fc .fc-button-primary {
@@ -31,3 +32,15 @@
 }
 
 
+
+
+/*-------------------------------- Responsive --------------------------------- */
+
+@media screen and (max-width: 600px) {
+  .big-title-custome {
+    font-size: 2.3rem;
+    line-height: 3rem;
+  }
+
+ 
+}

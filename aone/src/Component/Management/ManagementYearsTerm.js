@@ -137,15 +137,15 @@ const handleSubmit = async (e) => {
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <td className="text-center">{item.Years}</td>
-              <td className="text-center">{item.Term}</td>
-              <td className="text-center">{moment(item.date_begin).locale('th').format('LL')}</td>
-              <td className="text-center">{moment(item.date_end).locale('th').format('LL')}</td>
+              <td className="titleTd text-center">{item.Years}</td>
+              <td className="titleTd text-center">{item.Term}</td>
+              <td className="titleTd text-center">{moment(item.date_begin).locale('th').format('LL')}</td>
+              <td className="titleTd text-center">{moment(item.date_end).locale('th').format('LL')}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.Years,item.Term)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.Years,item.Term)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

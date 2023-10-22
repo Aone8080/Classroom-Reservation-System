@@ -143,7 +143,7 @@ const handleSubmit = async (e) => {
     <h3 className='big-title py-3'>จัดการข้อมูล</h3>
       <div className="d-flex justify-content-start align-items-center">
         <h3 className="title">ข้อมูลการลงทะเบียน</h3>
-        <button className="btn-manage ms-2" onClick={() => handleModalShow()}>
+        <button className="btn-manage ms-2 mb-3" onClick={() => handleModalShow()}>
           <FaPlus /> เพิ่มข้อมูล
         </button>
       </div>
@@ -152,49 +152,33 @@ const handleSubmit = async (e) => {
         <table className="table table-bordered shadow custom-table ">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">รหัสวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">อาจารย์ประจำคอร์ส</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ห้อง</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ปีการศึกษา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">เทอม</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">วัน</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">เวลา</h3>
-              </th>
+              <th className="titleTh text-center" scope="col">รหัสวิชา</th>
+              <th className="titleTh text-center" scope="col">ชื่อวิชา</th>
+              <th className="titleTh text-center" scope="col">อาจารย์ประจำคอร์ส</th>
+              <th className="titleTh text-center" scope="col">ห้อง</th>
+              <th className="titleTh text-center" scope="col">ปีการศึกษา</th>
+              <th className="titleTh text-center" scope="col">เทอม</th>
+              <th className="titleTh text-center" scope="col">วัน</th>
+              <th className="titleTh text-center" scope="col">เวลา</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item,index)=>(
             <tr key={index} >
-              <td className="text-center">{item.subj_code}</td>
-              <td className="text-center">{item.subj_name}</td>
-              <td className="text-center">{item.lect_name}</td>
-              <td className="text-center">{item.room_id}</td>
-              <td className="text-center">{item.Years}</td>
-              <td className="text-center">{item.Term}</td>
-              <td className="text-center">{item.day}</td>
-              <td className="text-center">{item.time}</td>
-              <td className="text-center">
+              <td className="titleTd text-center">{item.subj_code}</td>
+              <td className="titleTd text-center">{item.subj_name}</td>
+              <td className="titleTd text-center">{item.lect_name}</td>
+              <td className="titleTd text-center">{item.room_id}</td>
+              <td className="titleTd text-center">{item.Years}</td>
+              <td className="titleTd text-center">{item.Term}</td>
+              <td className="titleTd text-center">{item.day}</td>
+              <td className="titleTd text-center">{item.time}</td>
+              <td className="titleTd text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.course_id)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.course_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

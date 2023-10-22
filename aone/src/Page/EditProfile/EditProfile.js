@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 //function
 import {updatePassword}from "../../functions/user"
+import'./EditProfile.css'
 
 const EditProfile = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -37,10 +38,7 @@ const EditProfile = () => {
        <h3 className="title">ข้อมูลส่วนตัว</h3>
          <div className='container-main'>
             <div className="row p-4" >
-                <div class="col-4  cardImg-custome">
-                  
-                </div>
-                <div class="col-8 ">
+                <div class="col ">
                   <div className='d-flex m-4'>
                   <h3 className='title3 ' >รหัสประจำตัว:</h3>
                   <h3 className='title3 editspan ms-2' >{user ? user.username : ""}</h3>
@@ -62,11 +60,12 @@ const EditProfile = () => {
        </div>
        <h3 className="title mt-5">เปลี่ยนรหัสผ่าน</h3>
          <div className='container-main'>
-            <div className="row p-4 " style={{ height: '310px' }}>
+
+            <div className="row  " style={{ height: '310px' }}>
               <div class="col ">
 
                 <div className='d-flex m-4'>
-                  <h3 className='title3 m-2 me-5' >รหัสผ่านเดิม :</h3>
+                  <h3 className='title3-custom m-2 ' >รหัสผ่านเดิม :</h3>
                      <input
                       type="password"
                       value={oldPassword}
@@ -75,7 +74,7 @@ const EditProfile = () => {
                 </div>
 
                 <div className='d-flex m-4'>
-                <h3 className='title3 m-2 me-5' >รหัสผ่านใหม่ :</h3>
+                <h3 className='title3-custom m-2 ' >รหัสผ่านใหม่ :</h3>
                         <input
                         type="password"
                         value={newPassword}
@@ -84,15 +83,15 @@ const EditProfile = () => {
                 </div>
 
                 <div className='d-flex m-4'>
-                   <h3 className='title3 m-2' >ยืนยันรหัสผ่านใหม่ :</h3>
+                   <h3 className='title3-custom m-2' >ยืนยันรหัสผ่านใหม่ :</h3>
                    <input
                         type="password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                       />
                 </div>
-                <div className='d-flex m-4 '>
-                <button className="btn-manage2 me-3" onClick={handleUpdatePassword}>บันทึกรหัสผ่าน</button>
+                <div className='submit d-flex  m-4 '>
+                <button className="btn-manage2 me-3 " onClick={handleUpdatePassword}>บันทึกรหัสผ่าน</button>
                 </div>
                 
   

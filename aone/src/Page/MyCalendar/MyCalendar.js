@@ -75,13 +75,13 @@ const MyCalendar = () => {
       <h3 className="title ms-3">ค้นหาห้อง</h3>
       
       <div className="container-main mb-5">
-            <div className="d-flex justify-content-around">
-              <div className="m-3">
+            <div className="row">
+              <div className="col text-center mt-4 mb-4">
                 <label htmlFor="roomtype_id" className="dec">
                   ชนิดห้อง:
                 </label>
                 <select
-                  className="ms-2"
+                  className="ms-2 "
                   name="roomtype_id"
                   onChange={handleRoomTypeChange} // เรียกใช้งาน handleRoomTypeChange เมื่อมีการเลือกชนิดห้องใหม่
                 >
@@ -94,7 +94,7 @@ const MyCalendar = () => {
                 </select>
               </div>
 
-              <div className="m-3">
+              <div className="col text-center mt-4 mb-4">
                 <label htmlFor="room_id" className="dec ">
                   ห้อง:
                 </label>
@@ -113,7 +113,7 @@ const MyCalendar = () => {
               </div>
             </div>
       </div>
-      <h3 className="title ms-3 mb-2">ห้อง <span className="editspan"> {room_id}</span></h3>
+      <h3 className="title ms-3 mb-2">ห้อง :<span className="editspan"> {room_id}</span></h3>
       <div className="container-main mb-5">
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

@@ -122,13 +122,13 @@ const handleSubmit = async (e) => {
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>     
-              <td className="text-center">{item.roomtype_id}</td>
-              <td className="text-center">{item.roomtype_name}</td>
-              <td className="text-center">
+              <td className="titleTd text-center">{item.roomtype_id}</td>
+              <td className="titleTd text-center">{item.roomtype_name}</td>
+              <td className="titleTd text-center ">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.roomtype_id)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.roomtype_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

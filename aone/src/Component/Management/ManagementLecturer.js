@@ -109,25 +109,21 @@ const handleSubmit = async (e) => {
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">รหัสประจำตัว</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อ-นามสกุลอาจารย์</h3>
-              </th>
+              <th className="titleTh text-center" scope="col">รหัสประจำตัว</th>
+              <th className="titleTh text-center" scope="col">ชื่อ-นามสกุลอาจารย์</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <td className="text-center">{item.lect_id}</td>
-              <td className="text-center">{item.lect_name}</td>
-              <td className="text-center">
+              <td className="titleTd text-center">{item.lect_id}</td>
+              <td className="titleTd text-center">{item.lect_name}</td>
+              <td className="titleTd text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.lect_id)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.lect_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

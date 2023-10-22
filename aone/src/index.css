@@ -20,7 +20,7 @@ li {
   
 }
 
-/*------------------------ container------------------ */
+/*--------- container------------ */
 .container-main{
   width: 100%;
   max-width: 1080px;
@@ -41,8 +41,7 @@ li {
 
 }
 
-
-/*------------------------ button ------------------ */
+/*------------- button -------------- */
 .btn-manage{
   width: 96px;
   height: 36px;
@@ -55,7 +54,6 @@ li {
   border: none; 
 }
 .btn-manage2{
-  /* width: 100px; */
   height: 40px;
   color: #ffffff;
   background-color: #3F9BF0;
@@ -91,9 +89,7 @@ li {
   border: none; 
 }
 
-
-
-/*------------------------ text ------------------ */
+/*----------- font-text ---------- */
 .big-title {
   font-weight: 500;
   font-size: 3.3rem;
@@ -128,33 +124,104 @@ li {
   color: #3F9BF0;
 }
 
-/*-------------------------------- table-------------------- */
+/*----- -- table---------- */
 .titleTh{
   font-weight: 400;
   font-size: 1.3rem;
   color: #222222;
 }
+.titleTd{
+  font-weight: 300;
+  font-size: 1.1rem;
+  color: #222222;
+}
 .custom-table thead th {
-  background-color: #dddddd;
+  background-color: #dcdcdc;
+  border: 2px solid #AAAAAA;
 }
 
 
-/* ปิดเเถวเเนวนอน ที่ติดมากับ bootstap */
-/* .custom-table {
-  border-collapse: separate;
-  border-spacing: 0;
-} */
+
+/*-------------------------------- Responsive --------------------------------- */
 
 
-
-/*-------------------------------- card-------------------- */
-
-.cardImg-custome {
-  border: 1px solid #AAAAAA;
-  border-radius: 10px;
+@media screen and (max-width: 600px) {
   
-  
+  select {
+    height: 30px;
+    width: 105px;
+  }
+ 
+/*--------- container------------ */
+  .container-main-noborder {
+    margin: 0 auto;
+    padding: 0 0rem; 
+  }
+
+  .container-main {
+    padding: 0 0rem;
+  }
+
+ /*----------- font-text ---------- */
+  .big-title {
+    font-size: 2.3rem;
+    line-height: 3rem;
+  }
+
+  .title {
+    font-size: 1.4rem;
+    
+  }
+  .dec {
+    font-size: 1.0rem;
+  }
+  .title3 {
+    font-size: 1.0rem;
+    
 }
+  
+/*---------- table---------- */
+
+  .titleTh {
+    font-weight: 500;
+    font-size: 1.0rem;
+}
+  .titleTd{
+    font-size: 0.9rem;
+  }
+
+
+/*------------- button -------------- */
+
+.btn-manage2 {
+  height: 40px;
+  font-size: 11px;
+ 
+}
+
+.btn-trash{
+  width: 80px;
+  height: 40px;
+  font-size: 11px; 
+}
+.btn-edit{
+  width: 80px;
+  height: 40px;
+  font-size: 11px; 
+}
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
 
 

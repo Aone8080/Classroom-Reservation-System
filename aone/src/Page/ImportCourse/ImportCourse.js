@@ -170,12 +170,12 @@ const ImportCourse = () => {
 
 
   return (
-    <div className="h-container">
+    <div className="container-main-noborder">
       <h1 className="big-title mb-5">Import ข้อมูลการลงทะเบียนเรียน</h1>
       <p>โปรดเลือก Excel File ที่ท่านต้องการ Import</p>
       <div className="importfile" {...getRootProps()}>
         <input {...getInputProps()} className="hidden-input" />
-        <button className="btn1">เรียกดูไฟล์</button>
+        <button className="btn-custom-importfile">เรียกดูไฟล์</button>
         <h2 className="decs">หรือลากมาใส่ในกล่องนี้</h2>
       </div>
 
@@ -186,14 +186,14 @@ const ImportCourse = () => {
       >
         <Modal.Header closeButton>
           <Modal.Title className="text-center w-100">
-            <h3 className="titleModal">Import ข้อมูลการลงทะเบียนเรียน</h3>
+            <h3 className="big-title">Import ข้อมูลการลงทะเบียนเรียน</h3>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h3 className="titleModal2 ">
+          <h3 className="titleModal2 text-center ">
             ปีการศึกษา : {Years} ภาคการศึกษาที่ : {Term}
           </h3>
-          <div class="container text-center" style={{ maxHeight: '550px', overflowY: 'auto' }}>
+          <div class="container-modal text-center" >
             <div class="row">
               <div class="col text-start">
                 <h3 className="title">รหัสวิชา</h3>
@@ -217,26 +217,20 @@ const ImportCourse = () => {
               </div>
             </div>
 
-            <table className="table table-bordered shadow custom-table">
+            <table className="table table-bordered shadow custom-table mt-3" >
               <thead>
                 <tr>
-                  <th scope="col">
-                    <h3 className="titleTh">ที่</h3>
-                  </th>
-                  <th scope="col">
-                    <h3 className="titleTh">รหัสนักศึกษา</h3>
-                  </th>
-                  <th scope="col">
-                    <h3 className="titleTh">ชื่อ-สกุลนักศึกษา</h3>
-                  </th>
+                  <th className="titleTh" scope="col">ที่</th>
+                  <th className="titleTh" scope="col">รหัสนักศึกษา</th>
+                  <th className="titleTh" scope="col">ชื่อ-สกุลนักศึกษา</th>
                 </tr>
               </thead>
               <tbody>
                 {std_code.map((code, index) => (
                   <tr key={index}>
-                    <th scope="row">{index + 1}</th>
-                    <td>{code}</td>
-                    <td>{std_name[index]}</td>
+                    <th className="titleTd" scope="row">{index + 1}</th>
+                    <td className="titleTd">{code}</td>
+                    <td className="titleTd">{std_name[index]}</td>
                   </tr>
                 ))}
               </tbody>

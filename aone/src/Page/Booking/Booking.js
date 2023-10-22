@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 // Function
 import {  readYearsTermFromday } from "../../functions/years_term";
 import { readCoursesByLecturer } from "../../functions/course";
-
+import "./Booking.css"
 
 const Booking = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -71,8 +71,8 @@ useEffect(() => {
     <h1 className="big-title text-center">จองห้องเรียน</h1>
     <div className="container-main">
       <div className="d-flex justify-content-start align-items-center">
-        <h3 className="title">
-          วิชาที่มีสอนปีการศึกษา : <span className="editspan"> {years}</span>ภาคการศึกษาที่ : <span className="editspan">{term}</span>
+        <h3 className="title-custom mt-5 mb-3">
+          วิชาที่มีสอนปีการศึกษา : <span className="editspan"> {years} </span>ภาคการศึกษาที่ : <span className="editspan">{term}</span>
         </h3>
       </div>
 
@@ -80,27 +80,21 @@ useEffect(() => {
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">รหัสวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ห้องเรียน</h3>
-              </th>
-              <th className="text-center" scope="col"></th>
+              <th className="titleTh text-center" scope="col">รหัสวิชา</th>
+              <th className="titleTh text-center" scope="col">ชื่อวิชา</th>
+              <th className="titleTh text-center" scope="col">ห้องเรียน</th>
+              <th className="titleTh text-center" scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <td className="text-center">{item.subj_code}</td>
-                <td className="text-center">{item.subj_name}</td>
-                <td className="text-center">{item.room_id}</td>
-                <td className="text-center">
+                <td className="titleTd text-center">{item.subj_code}</td>
+                <td className="titleTd text-center">{item.subj_name}</td>
+                <td className="titleTd text-center">{item.room_id}</td>
+                <td className="titleTd text-center">
                   <button
-                    className="btn-manage2 me-3"
+                    className="btn-manage2  "
                     onClick={() => handleSubmit(item.course_id)}
                   >
                     จองห้องเรียนเพิ่มเติม

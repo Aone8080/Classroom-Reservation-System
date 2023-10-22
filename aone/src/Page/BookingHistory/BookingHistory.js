@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { readreservationByid,deleteReservation } from "../../functions/reservation";
 import moment from 'moment';
 import 'moment/locale/th';
-
+import "./BookingHistory.css"
 const BookingHistory = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [data, setData] = useState([]);
@@ -40,41 +40,29 @@ const BookingHistory = () => {
     <h1 className="big-title">ประวัติการจองห้องเรียน</h1>
     <div className="container-main">
       <div className="d-flex justify-content-start align-items-center">
-        <h3 className="title">รายการจองห้องของฉัน</h3>
+        <h3 className="title mt-3 mb-2">รายการจองห้องของฉัน</h3>
       </div>
       <div className="py-2">
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ห้องเรียน</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">รหัสวิชา</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ทำการจองห้องวันที่</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">เวลา</h3>
-              </th>
-              <th className="text-center" scope="col"></th>
+              <th className="titleTh text-center" scope="col">ห้องเรียน</th>
+              <th className="titleTh text-center" scope="col">วิชา</th>
+              <th className="titleTh text-center" scope="col">จองวันที่</th>
+              <th className="titleTh text-center" scope="col">เวลา</th>
+              <th className="titleTh text-center" scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <td className="text-center">{item.room_id}</td>
-                <td className="text-center">{item.subj_name}</td>
-                <td className="text-center">{item.subj_code}</td>
-                <td className="text-center">{moment(item.reservation_date).locale('th').format('LL')}</td>
-                <td className="text-center">{item.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"}</td>
-                <td className="text-center">
+                <td className="titleTd text-center">{item.room_id}</td>
+                <td className="titleTd text-center">{item.subj_code} {item.subj_name}</td>
+                <td className="titleTd text-center">{moment(item.reservation_date).locale('th').format('LL')}</td>
+                <td className="titleTd text-center">{item.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"}</td>
+                <td className="titleTd text-center">
                   <button
-                    className="btn-trash me-3"
+                    className="btn-trash "
                     onClick={() => handleDelete(item.reservation_id)}
                   >
                     ยกเลิกการจอง

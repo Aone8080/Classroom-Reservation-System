@@ -1,9 +1,15 @@
-.h-container {
-  width: 100%;
-  max-width: 1170px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  overflow: hidden;
+.btn-custom-importfile {
+  margin-top: 71px;
+  margin-bottom: 38px;
+  width: 248px;
+  height: 66px;
+  color: #ffffff;
+  background-color: #3f9bf0;
+  border-radius: 10px;
+  font-size: 40px;
+  cursor: pointer;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  border: none;
 }
 p {
   color: #818181;
@@ -26,40 +32,25 @@ p {
   font-size: 32px;
   color: #818181;
   font-weight: 300;
+  
 }
 
-.btn1 {
-  margin-top: 71px;
-  margin-bottom: 38px;
-}
-.btn1 {
-  width: 248px;
-  height: 66px;
-  color: #ffffff;
-  background-color: #3f9bf0;
-  border-radius: 10px;
-  font-size: 40px;
-  cursor: pointer;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-  border: none;
-}
-/*-------------------------------- table-------------------- */
-.titleModal {
-  font-weight: 500;
-  font-size: 2.4rem;
-  line-height: 4rem;
-}
+/*--------------------------------Custom-modal -------------------- */
+
 .titleModal2{
-margin-left: 50px;
+/* margin-left: 50px; */
+
 font-size: 1.8rem;
+margin-bottom: 25px;
 }
 
-.title:first-child {
-  margin-top: 25px;
+.container-modal{
+  padding: 0 1rem;
+  max-height: 550px;  
+  overflow-y: auto;
+  
 }
-.dec:last-child {
-  margin-bottom: 35px;
-} 
+
 
 .custom-modal .modal-dialog {
   max-width: 900px;
@@ -68,35 +59,13 @@ font-size: 1.8rem;
   margin-top: 80px;
 }
 
-/*-------------------------------- table-------------------- */
-.titleTh{
-  font-weight: 400;
-  font-size: 1.5rem;
-  color: #222222;
-}
-.custom-table thead th {
-  background-color: #dddddd;
-}
 
-.custom-table thead th:first-child {
-  border-top-left-radius: 10px;
-}
 
-.custom-table thead th:last-child {
-  border-top-right-radius: 10px;
-  border-right: none;
-}
-
-/* ปิดเเถวเเนวนอน ที่ติดมากับ bootstap */
-/* .custom-table {
-  border-collapse: separate;
-  border-spacing: 0;
-} */
-
-@media screen and (max-width: 750px) {
-  .title {
-    font-size: 2.3rem;
-    line-height: 3rem;
-    word-break: break-word;
+@media screen and (max-width: 600px) {
+  .container-modal{
+    padding: 0 0rem;
+    max-height: 420px; 
   }
+
 }
+

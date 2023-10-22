@@ -133,29 +133,23 @@ const [data, setData] = useState([]);
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">รหัสประจำตัว</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชื่อ-นามสกุล</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">สาขา</h3>
-              </th>
+              <th className="titleTh text-center" scope="col">รหัสประจำตัว</th>
+              <th className="titleTh text-center" scope="col">ชื่อ-นามสกุล</th>
+              <th className="titleTh text-center" scope="col">สาขา</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <td className="text-center">{item.std_code}</td>
-              <td className="text-center">{item.std_name}</td>
-              <td className="text-center">{item.major_name}</td>
+              <td className="titleTd text-center">{item.std_code}</td>
+              <td className="titleTd text-center">{item.std_name}</td>
+              <td className="titleTd text-center">{item.major_name}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.std_code)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.std_code)} >
                   <FaTrash /> ลบ
                 </button>
               </td>

@@ -130,33 +130,25 @@ const handleSubmit = async (e) => {
         <table className="table table-bordered shadow custom-table">
           <thead>
             <tr>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">อาคาร</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ห้อง</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ความจุ</h3>
-              </th>
-              <th className="text-center" scope="col">
-                <h3 className="titleTh">ชนิดห้อง</h3>
-              </th>
+              <th className="titleTh text-center" scope="col">อาคาร</th>
+              <th className="titleTh text-center" scope="col">ห้อง</th>
+              <th className="titleTh text-center" scope="col"> ความจุ</th>
+              <th className="titleTh text-center" scope="col"> ชนิดห้อง</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             {data.map((item,index)=>(
             <tr key={index}>
-              <td className="text-center">{item.building}</td>
-              <td className="text-center">{item.room_id}</td>
-              <td className="text-center">{item.capacity} คน</td>
-              <td className="text-center">{item.roomtype_name}</td>
+              <td className="titleTd text-center ">{item.building}</td>
+              <td className="titleTd text-center">{item.room_id}</td>
+              <td className="titleTd text-center">{item.capacity} คน</td>
+              <td className=" titleTd text-center">{item.roomtype_name}</td>
               <td className="text-center">
                 <button className="btn-edit me-3" onClick={() => showEditModal(item)}>
                   <FaRegEdit /> เเก้ไข
                 </button>
-                <button className="btn-trash" onClick={() => handleRemove(item.room_id)} >
+                <button className="btn-trash me-3" onClick={() => handleRemove(item.room_id)} >
                   <FaTrash /> ลบ
                 </button>
               </td>
