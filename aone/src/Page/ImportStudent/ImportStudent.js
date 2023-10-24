@@ -7,6 +7,11 @@ import { useSelector } from "react-redux";
 //function
 import{importStudent} from "../../functions/importExcel"
 import './ImportStudent.css'
+//Ant เเจ้ง Alert
+import { message } from 'antd';
+
+
+
 const ImportStudent = () => {
   const { user } = useSelector((state) => ({ ...state }));
   //module
@@ -32,7 +37,8 @@ const ImportStudent = () => {
   importStudent(user.token, value) 
   .then((res)=>{
     console.log(res);
-    alert("Import Student Success"); 
+    //alert("Import Student Success");
+    message.loading("Loading...", 2.5).then(()=>message.success('Import Student Success', 2.5)); 
     handleModalClose();
   })
   .catch((error) => {

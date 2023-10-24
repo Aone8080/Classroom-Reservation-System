@@ -7,7 +7,8 @@ import { Modal, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 //function
 import{importCourse} from "../../functions/importExcel"
-
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const ImportCourse = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -47,7 +48,6 @@ const ImportCourse = () => {
     subj_code,
     subj_name,
     course_id,
-    room_id,
     Years,
     Term,
     day,
@@ -59,11 +59,14 @@ const ImportCourse = () => {
     std_name,
     major_id,
     major_name,
+    room_id,
   };
+  console.log(value);
   importCourse(user.token, value) 
   .then((res)=>{
     console.log(res);
-    alert("Import Course Success"); 
+    //alert("Import Course Success"); 
+    message.loading("Loading...", 2.5).then(()=>message.success('Import Course Success', 2.5));
     handleModalClose();
   })
   .catch((error) => {

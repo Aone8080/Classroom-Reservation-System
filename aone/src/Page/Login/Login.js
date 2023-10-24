@@ -23,6 +23,8 @@ const Login = () => {
     password: "",
   });
 
+  const[aone, setAone] = useState("Aone Obomo");
+
   //check Role User for navigat 
   const roleBaseRedirect = (role) => {
     console.log(role);
@@ -45,7 +47,7 @@ const Login = () => {
     login(value)
       .then((res) => {
 
-        message.success("ยินดีต้อนรับ อาจารย์ "+res.data.payload.user.userName);
+        message.success("ยินดีต้อนรับ อาจารย์ "+res.data.payload.user.userName,1.5);
         dispatch({
           type: "LOGIN",
           payload: {
@@ -82,6 +84,7 @@ const Login = () => {
           />
         </div>
 
+
         <div className="form-group d-flex mt-4">
           <FaLock className="icon"/>
           <input
@@ -94,6 +97,7 @@ const Login = () => {
         </div>
         <div className="btn-container d-flex justify-content-center">
         <button className="btn-custom ">ลงชื่อเข้าใช้</button>
+        
         </div>
         
       </form>

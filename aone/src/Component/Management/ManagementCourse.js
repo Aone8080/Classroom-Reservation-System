@@ -197,7 +197,7 @@ const handleSubmit = async (e) => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div class="container ">
+          <div class="container-modal ">
             <form className="m-5">
               <div className="form-group mt-3">
                 <h3>รหัสวิชา</h3>
@@ -331,7 +331,7 @@ const handleSubmit = async (e) => {
     </Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    <div className="container">
+    <div className="container-modal ">
       <form className="m-5" onSubmit={handleEditSubmit}>
         <div className="form-group mt-3">
           <h3>รหัสวิชา</h3>

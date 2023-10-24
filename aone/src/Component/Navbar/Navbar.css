@@ -75,7 +75,7 @@ ul.collapsed{
 
 /*------------------------------------------------  Responsive Navbar ------------------------------------ */
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1030px) {
   
 .navbar {
   height: auto;
@@ -138,5 +138,19 @@ padding-left: 0px;
   padding: 4px;
 }
   
+}
+
+@media screen and (max-width: 1200px) {
+
+  ul{
+    margin-right: 20px;
+    margin-right: 90px;
+  }
+  .navbar-left {
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    margin-left: 20px;
+}
+
 }
 

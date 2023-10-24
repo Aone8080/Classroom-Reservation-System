@@ -6,6 +6,8 @@ import moment from 'moment';
 import 'moment/locale/th';
 // Function
 import { findDayTime, reservation} from "../../functions/reservation";
+//Ant เเจ้ง Alert
+import { message } from 'antd';
 
 const SinglePageBooking = () => {
   const { user } = useSelector((state) => ({ ...state }));
@@ -33,12 +35,14 @@ const SinglePageBooking = () => {
      e.preventDefault();
       // ให้ตรวจสอบเงื่อนไขที่ start_date และ end_date ไม่น้อยกว่า date_BeginYearsTerm และไม่มากกว่า date_EndYearsTerm
       if (moment(start_date).isBefore(date_BeginYearsTerm) || moment(start_date).isAfter(date_EndYearsTerm)) {
-        alert("วันที่เริ่มต้นต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
+        //alert("วันที่เริ่มต้นต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
+        message.warning("วันที่เริ่มต้นต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
         return;
       }
       // ตรวจสอบว่า end_date ไม่น้อยกว่า date_BeginYearsTerm และไม่มากกว่า date_EndYearsTerm
       if (moment(end_date).isBefore(date_BeginYearsTerm) || moment(end_date).isAfter(date_EndYearsTerm)) {
-        alert("วันที่สิ้นสุดต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
+        //alert("วันที่สิ้นสุดต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
+        message.warning("วันที่สิ้นสุดต้องอยู่ในช่วงปีการศึกษาที่ถูกต้อง");
         return;
       }
      const value = {
@@ -87,6 +91,7 @@ const SinglePageBooking = () => {
   reservation(user.token, value)
     .then((res) => {
       alert("Reservation Success");
+      //message.success("Reservation Success");
       window.location.reload();
     })
     .catch((err) => console.log(err.response.data));
@@ -97,15 +102,16 @@ const SinglePageBooking = () => {
     <>
       <h1 className="big-title">จองห้องเรียน</h1>
       <div className="container-main-custom">
-            <form className="m-3" onSubmit={handleSubmit}>
+            <form className="" onSubmit={handleSubmit}>
                 
-                <h3 className="title text-center mb-5">1. เลือกช่วงสัปดาห์ที่จะทำการจองห้องเรียน</h3>
-                    <div className="d-flex justify-content-center ">
+                <h3 className="title text-center mb-5 mt-5">1. เลือกช่วงสัปดาห์ที่จะทำการจองห้องเรียน</h3>
+                    <div className="d-flex justify-content-between ">
                       <div className="date-input">
                         <label className="me-2 dec" htmlFor="start_date">
                           วันเริ่มต้น:
                         </label>
                         <input
+                          className="input-custom"
                           type="date"
                           id="start_date"
                           name="start_date"
@@ -113,11 +119,12 @@ const SinglePageBooking = () => {
                           onChange={(e) => setStart_date(e.target.value)}
                         />
                       </div>
-                      <div className="date-input ms-5">
+                      <div className="date-input ms-3">
                         <label className="me-2 dec" htmlFor="end_date">
                           วันสิ้นสุด:
                         </label>
                         <input
+                          className="input-custom"
                           type="date"
                           id="end_date"
                           name="end_date"
@@ -129,11 +136,11 @@ const SinglePageBooking = () => {
                     
 
                 <h3 className="title text-center mt-5 mb-3">2. เลือกชนิดห้องเรียน</h3>
-                      <div className=" d-flex justify-content-center">
+                      <div className=" d-flex justify-content-between">
                       <div className="form-group mt-3">
-                        <label htmlFor="roomtype_id"  className="dec">ชนิดห้อง: </label>
+                        <label htmlFor="roomtype_id"  className="me-2 dec">ชนิดห้อง: </label>
                         <select
-                          className="ms-2"
+                          className="Select-custom "
                           name="roomtype_id"
                           value={roomtype_id}
                           onChange={(e) => setRoomtype_id(e.target.value)}
@@ -142,12 +149,13 @@ const SinglePageBooking = () => {
                           <option value="1">ห้องเรียน</option>
                           <option value="2">ห้องประชุม</option>
                           <option value="3">ห้องหุ่นยน</option>
+                          <option value="4">ห้องคอมพิวเตอร์</option>
                         </select>
                       </div>
                       <div className="form-group mt-3">
-                      <label htmlFor="capacity"  className="dec ms-5">ความจุ:</label>
+                      <label htmlFor="capacity"  className="me-2 dec">ความจุ : </label>
                         <select
-                         className="ms-2"
+                          className="Select-custom "
                           name="capacity"
                           value={capacity}
                           onChange={(e) => setCapacity(e.target.value)}
@@ -169,7 +177,7 @@ const SinglePageBooking = () => {
 
 
            {data && data.allResult && (
-              <div className="schedule-container mb-5">
+              <div className="schedule-container mb-5" style={{maxHeight:"550px",overflowY:"auto"}}>
                 <h3 className="title text-center mt-5 mb-3">3. ตารางสอนที่สามารถจองได้</h3>
                 <h3 className="dec text-center mt-5 mb-2">
                   ช่วงเวลาตั้งแต่วันที่ <span className="editspan">{moment(start_date).locale('th').format('LL')}</span> ถึง{" "}

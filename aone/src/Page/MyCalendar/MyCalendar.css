@@ -7,6 +7,14 @@
   text-align: center;
 }
 
+.select-custom2{
+  border: 1px solid #AAAAAA;
+  height: 35px;
+  width: 180px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
+ 
+}
 
 
 /*-------------- Custom FullCalendar  นาฬิกา ------------------*/
@@ -40,6 +48,11 @@
   .big-title-custome {
     font-size: 2.3rem;
     line-height: 3rem;
+  }
+
+  .select-custom2 {
+    height: 30px;
+    width: 105px;
   }
 
  

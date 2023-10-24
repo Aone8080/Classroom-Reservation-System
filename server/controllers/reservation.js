@@ -34,7 +34,7 @@ exports.findAvailableTimeSlots = async (req, res) => {
     const reservationRowsStudent = results[3]; // ข้อมูลการจองห้องของนักเรียนในคอร์สทุกคน
     const roomTypeRows=results[4];             // ข้อมูลห้องที่ตรงกับชนิดห้องที่ต้องการ roomtype_id
     const normalScheduleRows = results[5];     // ข้อมูลตารางสอนปกติของห้องตาม roomtype_id
-    const reservationRowsRoom = results[6];       // ข้อมูลการจองห้องของห้องเรียนที่ตรงกับ roomtype_id
+    const reservationRowsRoom = results[6];      // ข้อมูลการจองห้องของห้องเรียนที่ตรงกับ roomtype_id
     
 //todo----------------------------------------------A.Lectuler----------------------------------------------------------
 

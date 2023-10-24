@@ -9,26 +9,22 @@
   border-radius: 10px;
 }
 
-input{
+.input-custom{
   border: 1px solid #AAAAAA;
-  height: 43px;
+  height: 35px;
   width: 180px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
 }
 
-select{
+.Select-custom{
   border: 1px solid #AAAAAA;
-  height: 43px;
+  height: 35px;
   width: 180px;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
   border-radius: 5px;
  
 }
-
-
-
-
 
 
 
@@ -50,4 +46,12 @@ select{
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
     border: none; 
     margin-top: 30px;
+  }
+
+
+  @media screen and (max-width: 600px) {
+    .container-main-custom {
+      padding: 0 0rem;
+  }
+
   }

@@ -4,6 +4,9 @@ import { readreservationByid,deleteReservation } from "../../functions/reservati
 import moment from 'moment';
 import 'moment/locale/th';
 import "./BookingHistory.css"
+
+
+
 const BookingHistory = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [data, setData] = useState([]);
@@ -24,16 +27,18 @@ const BookingHistory = () => {
   }, [user]);
   
 
-      const handleDelete =(id)=>{
-        deleteReservation(user.token, id)
-          .then((res) => { 
-            alert("delete Reservation Success");
-            window.location.reload();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+  const handleDelete =(id)=>{
+    if (window.confirm("Are You Sure Delete!!")) {
+    deleteReservation(user.token, id)
+      .then((res) => { 
+        //alert("delete Reservation Success");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }
 
   return (
     <>

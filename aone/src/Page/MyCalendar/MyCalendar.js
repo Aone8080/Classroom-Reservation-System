@@ -28,6 +28,8 @@ const MyCalendar = () => {
         console.log(err.response.data);
       });
   }, []);
+
+  
   
 
 
@@ -81,7 +83,7 @@ const MyCalendar = () => {
                   ชนิดห้อง:
                 </label>
                 <select
-                  className="ms-2 "
+                  className="select-custom2 ms-2 "
                   name="roomtype_id"
                   onChange={handleRoomTypeChange} // เรียกใช้งาน handleRoomTypeChange เมื่อมีการเลือกชนิดห้องใหม่
                 >
@@ -99,7 +101,7 @@ const MyCalendar = () => {
                   ห้อง:
                 </label>
                 <select
-                  className="ms-2"
+                  className="select-custom2 ms-2"
                   name="room_id"
                   onChange={(e) => setRoom_id(e.target.value)}
                 >
