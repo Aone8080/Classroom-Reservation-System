@@ -6,19 +6,16 @@ import 'moment/locale/th';
 import "./BookingHistory.css"
 
 
-
 const BookingHistory = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [data, setData] = useState([]);
 
-  
   useEffect(() => {
-    if (user && user.token) {             // เช็คว่า user ถูกโหลดเสร็จแล้ว
+    if (user && user.token) {          
       const ID = user.username
       readreservationByid(user.token, ID)
         .then((res) => {
           setData(res.data); 
-          
         })
         .catch((error) => {
           console.log(error);

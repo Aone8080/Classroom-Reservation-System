@@ -59,7 +59,6 @@ useEffect(() => {
     }
   }, [user,years,term]);
 
-  
 
   const handleSubmit = (id) => {
     navigate(`/booking/${id}`, { state: { years, term, date_BeginYearsTerm, date_EndYearsTerm } }); 

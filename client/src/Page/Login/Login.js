@@ -12,18 +12,13 @@ import { message } from 'antd';
 
 
 
-
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
- 
-
   const [value, setValue] = useState({
     username: "",
     password: "",
   });
-
-  const[aone, setAone] = useState("Aone Obomo");
 
   //check Role User for navigat 
   const roleBaseRedirect = (role) => {
@@ -68,6 +63,7 @@ const Login = () => {
       });
   };
 
+
   return (
     <div className="container-main2">
       <h3 className="big-title-custom">เข้าสู่ระบบ</h3>
@@ -83,8 +79,6 @@ const Login = () => {
             onChange={handleChange}
           />
         </div>
-
-
         <div className="form-group d-flex mt-4">
           <FaLock className="icon"/>
           <input
@@ -97,9 +91,7 @@ const Login = () => {
         </div>
         <div className="btn-container d-flex justify-content-center">
         <button className="btn-custom ">ลงชื่อเข้าใช้</button>
-        
-        </div>
-        
+        </div> 
       </form>
     </div>
   );

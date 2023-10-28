@@ -13,15 +13,10 @@ const BookingApproval = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [faculty, setFaculty] = useState("เทคโนโลยีอุตสาหกรรม");
   const [major_name, setMajor_name] = useState("วิศวะกรรมคอมพิวเตอร์");
-  //module
+  //modale
   const [showModal, setShowModal] = useState(false);
   const handleModalClose = () => setShowModal(false);
   const handleModalShow = () => setShowModal(true);
-
-
-
-
-
 
 
   //1------------------------------------------readAllReservation and loadData---------------------------------
@@ -69,10 +64,6 @@ useEffect(() => {
 }, []);
 
       
-    
-
-
-
 //--------------------------------------------------------เอาข้อมูลของคอร์สไปset ใน modal เพื่อตรวจสอบ ---------------------------------
   // เอา item ไปsetใน modal
   const [selectedItem, setSelectedItem] = useState(null);
@@ -82,9 +73,6 @@ useEffect(() => {
       
   };
 
- 
-
-  
 
   return (
     <>
@@ -152,7 +140,6 @@ useEffect(() => {
                   <h3 className="titleTd">{item.reservation_time === "AM" ? "08:00 - 12:00" : "12:00 - 18:00"}</h3>
                 </td>
                
-                
                 <td className="text-center">
                   <button
                     className="btn-manage2 "
@@ -218,14 +205,9 @@ useEffect(() => {
         </Modal.Footer>
       </Modal>
 
-        
          <div className="row">
-          <div className="col">
-            
-          </div>
+          <div className="col"></div>
          </div>
-
-
     </div>
     </>
   )

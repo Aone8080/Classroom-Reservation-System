@@ -12,12 +12,10 @@ import { readAllRoomsType, readAllroomByRoomtype } from '../../functions/room'; 
 const MyCalendar = () => {
   const { user } = useSelector((state) => ({ ...state }));
   const [events, setEvents] = useState([]);
-
   const [roomtype_id, setRoomtype_id] = useState([]);// 1 fetch dataมาลง roomtype_id
   const [rooms, setRooms] = useState([]);            // 2 fetch dataมาลง room
   const [room_id, setRoom_id] = useState("");        // 3 เลือกห้องนำมาเเสดงใน calendar
   
-
   // 1 fetch dataมาลง roomtype_id
   useEffect(() => {
     readAllRoomsType()
@@ -28,10 +26,6 @@ const MyCalendar = () => {
         console.log(err.response.data);
       });
   }, []);
-
-  
-  
-
 
   // 2 fetch dataมาลง room
   const handleRoomTypeChange = (e) => {
@@ -45,10 +39,6 @@ const MyCalendar = () => {
       });
   };
   
-  
-
-  
-
   useEffect(() => {
     if (user && user.token && room_id) {
       readreservationByRoomid(user.token, room_id)

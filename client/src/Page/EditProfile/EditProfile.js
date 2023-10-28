@@ -12,7 +12,6 @@ const EditProfile = () => {
   
 
   const handleUpdatePassword = () => {
-   
     const values = {
       user_id: user.username, 
       oldPassword,
@@ -27,12 +26,9 @@ const EditProfile = () => {
         })
         .catch((err) => {
           alert(err.response.data);
-          
         });
-
   };
  
-
   return (
     <div className='container-main-noborder'>
        <h3 className="title">ข้อมูลส่วนตัว</h3>
@@ -93,8 +89,6 @@ const EditProfile = () => {
                 <div className='submit d-flex  m-4 '>
                 <button className="btn-manage2 me-3 " onClick={handleUpdatePassword}>บันทึกรหัสผ่าน</button>
                 </div>
-                
-  
               </div>
                 
             </div>

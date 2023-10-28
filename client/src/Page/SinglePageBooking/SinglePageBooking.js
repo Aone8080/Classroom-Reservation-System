@@ -171,11 +171,9 @@ const SinglePageBooking = () => {
                   <button className="btn-custom ">ค้นหา</button>
                 </div>
             </form>
-
-
-
-
-
+       
+       
+           {/* ถ้ามีdata */}
            {data && data.allResult && (
               <div className="schedule-container mb-5" style={{maxHeight:"550px",overflowY:"auto"}}>
                 <h3 className="title text-center mt-5 mb-3">3. ตารางสอนที่สามารถจองได้</h3>
