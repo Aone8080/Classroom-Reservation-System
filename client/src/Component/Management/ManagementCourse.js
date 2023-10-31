@@ -28,7 +28,6 @@ const ManagementCourse = () => {
 
 
 //------------------------------------------cerate Course--------------------------------------------
-//createModal
 const [showModal, setShowModal] = useState(false);
 const handleModalClose = () => setShowModal(false);
 const handleModalShow = () => setShowModal(true);
